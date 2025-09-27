@@ -1,27 +1,16 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "apps/web/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "apps/api/src/index.ts",
-      "use": "@vercel/node"
+  "buildCommand": "npm run build --workspace=apps/web",
+  "outputDirectory": "apps/web/dist",
+  "installCommand": "npm install",
+  "functions": {
+    "apps/api/src/index.ts": {
+      "runtime": "@vercel/node"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "apps/api/src/index.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "apps/web/dist/$1"
+      "source": "/api/(.*)",
+      "destination": "/apps/api/src/index.ts"
     }
-  ],
-  "outputDirectory": "apps/web/dist"
+  ]
 }
