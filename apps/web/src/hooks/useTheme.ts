@@ -14,10 +14,20 @@ export function useTheme() {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     
     const updateResolvedTheme = () => {
+      let newResolvedTheme: 'light' | 'dark'
       if (theme === 'system') {
-        setResolvedTheme(mediaQuery.matches ? 'dark' : 'light')
+        newResolvedTheme = mediaQuery.matches ? 'dark' : 'light'
       } else {
-        setResolvedTheme(theme)
+        newResolvedTheme = theme
+      }
+      
+      setResolvedTheme(newResolvedTheme)
+      
+      // Immediately update DOM classes
+      if (newResolvedTheme === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
       }
     }
 
@@ -31,6 +41,13 @@ export function useTheme() {
     const newTheme = resolvedTheme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
     localStorage.setItem('theme', newTheme)
+    
+    // Immediately update DOM for instant visual feedback
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
   }
 
   const setThemeMode = (newTheme: Theme) => {
