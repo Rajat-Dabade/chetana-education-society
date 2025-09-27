@@ -35,7 +35,8 @@ app.use(cors({
     'https://chetana-education-society-api.vercel.app',
     'https://*.vercel.app',
     'https://*.netlify.app',
-    'https://*.netlify.com'
+    'https://*.netlify.com',
+    'https://chetana-education-society.netlify.app'
   ],
   credentials: true
 }));
@@ -59,7 +60,8 @@ const strictLimiter = rateLimit({
   }
 });
 
-app.use(limiter);
+// Temporarily disable rate limiting for testing
+// app.use(limiter);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -68,13 +70,13 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// API routes
-app.use('/api/auth', strictLimiter, authRoutes);
+// API routes  
+app.use('/api/auth', authRoutes); // Removed rate limiting for testing
 app.use('/api/impact', impactRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/gallery', galleryRoutes);
-app.use('/api/upload', strictLimiter, uploadRoutes);
+app.use('/api/upload', uploadRoutes); // Removed rate limiting for testing
 app.use('/api/settings', settingsRoutes);
 
 // API root endpoint
