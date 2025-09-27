@@ -2,6 +2,10 @@ import axios from 'axios'
 
 const API_BASE_URL = (import.meta as any).env.VITE_API_URL || '/api'
 
+// Debug: Log the API URL being used
+console.log('🔍 Frontend API URL:', API_BASE_URL)
+console.log('🔍 Environment variables:', (import.meta as any).env)
+
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
