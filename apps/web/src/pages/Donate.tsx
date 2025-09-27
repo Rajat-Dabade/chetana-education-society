@@ -192,15 +192,15 @@ export default function Donate() {
                 <div key={method.name} className="relative pl-16">
                   <dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
                     <div className={`absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg ${
-                      method.method === 'Credit Card' ? 'bg-blue-100 dark:bg-blue-900/20' :
-                      method.method === 'Bank Transfer' ? 'bg-green-100 dark:bg-green-900/20' :
-                      method.method === 'PayPal' ? 'bg-purple-100 dark:bg-purple-900/20' :
+                      method.name === 'Credit Card' ? 'bg-blue-100 dark:bg-blue-900/20' :
+                      method.name === 'Bank Transfer' ? 'bg-green-100 dark:bg-green-900/20' :
+                      method.name === 'PayPal' ? 'bg-purple-100 dark:bg-purple-900/20' :
                       'bg-orange-100 dark:bg-orange-900/20'
                     }`}>
                       <method.icon className={`h-6 w-6 ${
-                        method.method === 'Credit Card' ? 'text-blue-600 dark:text-blue-400' :
-                        method.method === 'Bank Transfer' ? 'text-green-600 dark:text-green-400' :
-                        method.method === 'PayPal' ? 'text-purple-600 dark:text-purple-400' :
+                        method.name === 'Credit Card' ? 'text-blue-600 dark:text-blue-400' :
+                        method.name === 'Bank Transfer' ? 'text-green-600 dark:text-green-400' :
+                        method.name === 'PayPal' ? 'text-purple-600 dark:text-purple-400' :
                         'text-orange-600 dark:text-orange-400'
                       }`} aria-hidden="true" />
                     </div>
