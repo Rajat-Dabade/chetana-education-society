@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
       ]
     });
     res.json(images);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get gallery images error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -57,7 +57,7 @@ router.post('/', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.status(201).json(image);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create gallery image error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -78,7 +78,7 @@ router.put('/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json(image);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Gallery image not found', 'NOT_FOUND'));
     }
@@ -95,7 +95,7 @@ router.delete('/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json({ message: 'Gallery image deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Gallery image not found', 'NOT_FOUND'));
     }
@@ -124,7 +124,7 @@ router.post('/reorder', requireAuth, async (req: AuthRequest, res) => {
     );
 
     res.json({ message: 'Gallery order updated successfully' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Reorder gallery error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }

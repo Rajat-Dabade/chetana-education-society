@@ -62,7 +62,7 @@ router.post('/', requireAuth, upload.single('file'), async (req: AuthRequest, re
       filename: req.file.filename,
       id: media.id
     });
-  } catch (error) {
+  } catch (error: any) {
     // Clean up file if database save fails
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
@@ -89,7 +89,7 @@ router.get('/', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json(media);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get media error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -118,7 +118,7 @@ router.delete('/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json({ message: 'Media deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Delete media error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }

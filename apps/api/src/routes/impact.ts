@@ -20,7 +20,7 @@ router.get('/testimonials', async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
     res.json(testimonials);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get testimonials error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -39,7 +39,7 @@ router.post('/testimonials', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.status(201).json(testimonial);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create testimonial error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -59,7 +59,7 @@ router.put('/testimonials/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json(testimonial);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Testimonial not found', 'NOT_FOUND'));
     }
@@ -75,7 +75,7 @@ router.delete('/testimonials/:id', requireAuth, async (req: AuthRequest, res) =>
     });
 
     res.json({ message: 'Testimonial deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Testimonial not found', 'NOT_FOUND'));
     }
@@ -91,7 +91,7 @@ router.get('/stories', async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
     res.json(stories);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get stories error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -108,7 +108,7 @@ router.get('/stories/:slug', async (req, res) => {
     }
 
     res.json(story);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get story error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -139,7 +139,7 @@ router.post('/stories', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.status(201).json(story);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create story error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -164,7 +164,7 @@ router.put('/stories/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json(story);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Story not found', 'NOT_FOUND'));
     }
@@ -183,7 +183,7 @@ router.delete('/stories/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json({ message: 'Story deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Story not found', 'NOT_FOUND'));
     }
@@ -199,7 +199,7 @@ router.get('/milestones', async (req, res) => {
       orderBy: { achievedOn: 'desc' }
     });
     res.json(milestones);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get milestones error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -221,7 +221,7 @@ router.post('/milestones', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.status(201).json(milestone);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create milestone error:', error);
     res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
   }
@@ -235,9 +235,9 @@ router.put('/milestones/:id', requireAuth, async (req: AuthRequest, res) => {
       return res.status(400).json(formatValidationErrors(result.error.errors));
     }
 
-    const updateData = { ...result.data };
+    const updateData: any = { ...result.data };
     if (updateData.achievedOn) {
-      updateData.achievedOn = new Date(updateData.achievedOn);
+      updateData.achievedOn = new Date(updateData.achievedOn).toISOString();
     }
 
     const milestone = await prisma.milestone.update({
@@ -246,7 +246,7 @@ router.put('/milestones/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json(milestone);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Milestone not found', 'NOT_FOUND'));
     }
@@ -262,7 +262,7 @@ router.delete('/milestones/:id', requireAuth, async (req: AuthRequest, res) => {
     });
 
     res.json({ message: 'Milestone deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'P2025') {
       return res.status(404).json(formatError('Milestone not found', 'NOT_FOUND'));
     }
