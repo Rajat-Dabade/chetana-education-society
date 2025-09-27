@@ -194,9 +194,9 @@ export default function Home() {
             <img
               src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop"
               alt="Community volunteers working together"
-              className="w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
-              width={2432}
-              height={1442}
+              className="w-full max-w-full rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover"
+              width={800}
+              height={600}
             />
           </div>
         </div>

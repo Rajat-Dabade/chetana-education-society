@@ -6,10 +6,12 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px; /* Account for sticky navbar */
+    overflow-x: hidden; /* Prevent horizontal scroll */
   }
   
   body {
     @apply text-gray-900 dark:text-gray-100 bg-white dark:bg-navy-950;
+    overflow-x: hidden; /* Prevent horizontal scroll */
   }
   
   /* Smooth scrolling for all elements */
