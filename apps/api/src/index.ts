@@ -66,6 +66,16 @@ app.use('/api/gallery', galleryRoutes);
 app.use('/api/upload', strictLimiter, uploadRoutes);
 app.use('/api/settings', settingsRoutes);
 
+// API root endpoint
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'Chetana Education Society API',
+    version: '1.0.0',
+    status: 'Running on Railway',
+    endpoints: ['/auth', '/blogs', '/news', '/impact', '/gallery', '/upload', '/settings', '/health']
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
