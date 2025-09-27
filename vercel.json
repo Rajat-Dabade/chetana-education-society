@@ -1,5 +1,5 @@
 {
-  "buildCommand": "prisma generate && cd apps/web && npm install && npm run build",
+  "buildCommand": "./build.sh",
   "outputDirectory": "apps/web/dist",
   "installCommand": "npm install",
   "functions": {
