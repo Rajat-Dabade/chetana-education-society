@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  quote     String
+  rating    Int      @default(5) // 1-5 star rating
+  avatarUrl String?
+  createdAt DateTime @default(now())
+}
+
+model SuccessStory {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String   // HTML or markdown stored as string
+  coverUrl  String?
+  createdAt DateTime @default(now())
+}
+
+model Milestone {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  achievedOn  DateTime
+  createdAt   DateTime @default(now())
+}
+
+model NewsItem {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  type      String   // "NEWS" or "EVENT"
+  date      DateTime
+  body      String   // HTML
+  heroUrl   String?
+  gallery   String   // JSON string array
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  author      String
+  coverUrl    String?
+  excerpt     String
+  content     String   // HTML
+  order       Int      @default(0) // higher priority first; then date desc
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  filename  String
+  createdAt DateTime @default(now())
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String
+  order       Int      @default(0)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model SiteSetting {
+  id         Int     @id @default(1)
+  siteName   String  @default("Our NGO")
+  primaryHex String  @default("#0038B8")
+  logoUrl    String?
+}

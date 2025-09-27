@@ -1,0 +1,48 @@
+{
+  "name": "ngo-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,json,css}\""
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "@tanstack/react-query": "^4.35.0",
+    "react-hook-form": "^7.45.4",
+    "@hookform/resolvers": "^3.3.1",
+    "zod": "^3.22.4",
+    "axios": "^1.5.0",
+    "lucide-react": "^0.279.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^1.14.0",
+    "@tiptap/react": "^2.1.8",
+    "@tiptap/starter-kit": "^2.1.8",
+    "@tiptap/extension-link": "^2.1.8",
+    "@tiptap/extension-image": "^2.1.8",
+    "react-hot-toast": "^2.4.1",
+    "dompurify": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "prettier": "^3.0.2",
+    "tailwindcss": "^3.3.3",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.28",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}
