@@ -12,6 +12,7 @@ import blogRoutes from './routes/blogs';
 import galleryRoutes from './routes/gallery';
 import uploadRoutes from './routes/upload';
 import settingsRoutes from './routes/settings';
+import { setupDatabase } from './startup';
 
 dotenv.config();
 
@@ -102,6 +103,9 @@ app.use('*', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  
+  // Set up database on startup
+  await setupDatabase();
 });
