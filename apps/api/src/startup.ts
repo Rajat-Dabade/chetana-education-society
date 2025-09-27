@@ -3,7 +3,14 @@ import { execSync } from 'child_process';
 
 export async function setupDatabase() {
   try {
-    console.log('🔍 Checking database setup...');
+    console.log('🔍 Setting up database at runtime...');
+    
+    // First, push schema to create tables
+    console.log('📦 Creating database tables...');
+    execSync('npx prisma db push --accept-data-loss', { 
+      stdio: 'inherit', 
+      cwd: __dirname + '/..' 
+    });
     
     // Check if admin user exists (indicates database is seeded)
     const adminExists = await prisma.adminUser.findFirst();
@@ -20,6 +27,7 @@ export async function setupDatabase() {
     }
   } catch (error) {
     console.error('❌ Database setup failed:', error);
+    console.log('⚠️ App will continue without database setup');
     // Don't throw error - let app start anyway
   }
 }
