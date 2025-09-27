@@ -1,10 +1,12 @@
 import axios from 'axios'
 
+console.log('🔍 Raw VITE_API_URL:', (import.meta as any).env.VITE_API_URL)
+console.log('🔍 All environment variables:', (import.meta as any).env)
+
 const API_BASE_URL = (import.meta as any).env.VITE_API_URL || '/api'
 
-// Debug: Log the API URL being used
-console.log('🔍 Frontend API URL:', API_BASE_URL)
-console.log('🔍 Environment variables:', (import.meta as any).env)
+console.log('🔍 Final API_BASE_URL being used:', API_BASE_URL)
+console.log('🔍 Is VITE_API_URL defined?', !!(import.meta as any).env.VITE_API_URL)
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -12,6 +14,30 @@ export const api = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
+// Debug: Log all API requests
+api.interceptors.request.use(
+  (config) => {
+    console.log('🚀 Making API request to:', config.baseURL + config.url)
+    return config
+  },
+  (error) => {
+    console.error('❌ API request error:', error)
+    return Promise.reject(error)
+  }
+)
+
+// Debug: Log all API responses
+api.interceptors.response.use(
+  (response) => {
+    console.log('✅ API response from:', response.config.url, 'Status:', response.status)
+    return response
+  },
+  (error) => {
+    console.error('❌ API response error:', error.config?.url, 'Status:', error.response?.status)
+    return Promise.reject(error)
+  }
+)
 
 // Request interceptor to add auth token
 api.interceptors.request.use((config) => {
