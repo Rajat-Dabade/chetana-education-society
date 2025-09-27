@@ -40,15 +40,23 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
+// Rate limiting - More generous for production
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 1000, // limit each IP to 1000 requests per windowMs
+  message: {
+    error: 'Too many requests, please try again later.',
+    retryAfter: '15 minutes'
+  }
 });
 
 const strictLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20 // limit each IP to 20 requests per windowMs for POST/PUT/DELETE
+  max: 100, // limit each IP to 100 requests per windowMs for POST/PUT/DELETE
+  message: {
+    error: 'Too many requests for this action, please try again later.',
+    retryAfter: '15 minutes'
+  }
 });
 
 app.use(limiter);
