@@ -5,10 +5,26 @@ type Theme = 'light' | 'dark' | 'system'
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem('theme')
-    return (stored as Theme) || 'system'
+    return (stored as Theme) || 'light'
   })
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'dark') return 'dark'
+    if (stored === 'light') return 'light'
+    // Default to light for first-time visitors
+    return 'light'
+  })
+
+  // Initialize theme on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('theme')
+    if (!stored) {
+      // First time visitor - ensure light mode
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }, [])
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
