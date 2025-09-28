@@ -7,7 +7,7 @@ import SectionHeader from '@/components/SectionHeader'
 import StoryCard from '@/components/StoryCard'
 import TestimonialCarousel from '@/components/TestimonialCarousel'
 import EmptyState from '@/components/EmptyState'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+import MilestoneItem from '@/components/MilestoneItem'
 
 export default function Impact() {
   const { data: stories, isLoading: storiesLoading } = useQuery({
@@ -25,181 +25,118 @@ export default function Impact() {
     queryFn: () => impactApi.getMilestones().then(res => res.data)
   })
 
+  const currentYearStats = [
+    { id: 1, name: 'Children Educated', value: '2,847', change: '+12%' },
+    { id: 2, name: 'Communities Reached', value: '45', change: '+8%' },
+    { id: 3, name: 'Teachers Trained', value: '156', change: '+25%' },
+    { id: 4, name: 'Success Rate', value: '94%', change: '+3%' },
+  ]
+
   return (
-    <div className="animate-fade-in">
-      {/* Hero Section */}
+    <div className="min-h-screen">
       <Hero
         title="Our Impact"
-        subtitle="Discover the real stories of transformation, the milestones we've achieved, and the voices of those whose lives have been touched by our work."
-        backgroundImage="https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1920&h=1080&fit=crop"
+        subtitle="Measuring the difference we make together"
+        primaryCTA={{
+          text: "Support Our Mission",
+          href: "/donate"
+        }}
+        secondaryCTA={{
+          text: "Read Success Stories",
+          href: "#stories"
+        }}
+        backgroundImage="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&h=1080&fit=crop"
       />
 
-      {/* Success Stories */}
+      {/* Current Year Impact Stats */}
       <section className="py-16 sm:py-24 bg-white dark:bg-navy-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            title="Success Stories"
-            subtitle="Real stories of transformation and hope from the communities we serve"
-          />
-
-          {storiesLoading ? (
-            <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="card p-6">
-                    <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-3"></div>
-                    <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:max-w-none">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                Real-Time Impact Dashboard
+              </h2>
+              <p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
+                Live updates from our ongoing programs and initiatives
+              </p>
+            </div>
+            <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {currentYearStats.map((stat, index) => (
+                <div 
+                  key={stat.id} 
+                  className="flex flex-col items-center text-center p-6 bg-gray-50 dark:bg-navy-800 rounded-2xl animate-scale-in hover-lift"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="text-4xl sm:text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                    {stat.name}
+                  </div>
+                  <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+                    {stat.change} this year
                   </div>
                 </div>
               ))}
             </div>
-          ) : stories && stories.length > 0 ? (
-            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 sm:gap-8 sm:mt-16">
-              {stories.map((story: any) => (
-                <StoryCard key={story.id} story={story} />
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories */}
+      <section className="py-24 bg-gray-50 dark:bg-navy-900">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <SectionHeader
+            title="Success Stories"
+            subtitle="Real stories of transformation and hope from our community"
+          />
+          
+          {!storiesLoading && stories && stories.length > 0 ? (
+            <div className="mt-16 grid gap-8 lg:grid-cols-2">
+              {stories.slice(0, 4).map((story: any, index: number) => (
+                <div 
+                  key={story.id}
+                  className="animate-slide-up hover-lift"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <StoryCard story={story} />
+                </div>
               ))}
             </div>
           ) : (
             <div className="mt-16">
               <EmptyState
-                title="No success stories yet"
-                description="Check back soon for inspiring stories of transformation and hope."
+                title="No stories yet"
+                description="Check back soon for inspiring stories from our community."
+                icon={Calendar}
               />
             </div>
           )}
         </div>
       </section>
 
-      {/* Milestones */}
-      <section className="py-24 bg-gray-50 dark:bg-navy-900">
+      {/* Milestones Timeline */}
+      <section className="py-24 bg-white dark:bg-navy-950">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <SectionHeader
             title="Our Milestones"
-            subtitle="Key achievements and moments that mark our journey of creating positive change"
+            subtitle="Key achievements and moments that shaped our journey"
           />
-
-          {milestonesLoading ? (
-            <div className="mt-16 space-y-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse flex items-start space-x-4">
-                  <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : milestones && milestones.length > 0 ? (
+          
+          {!milestonesLoading && milestones && milestones.length > 0 ? (
             <div className="mt-16">
               <div className="relative max-w-6xl mx-auto">
                 {/* Timeline line - central on desktop, left on mobile */}
                 <div className="absolute left-6 lg:left-1/2 top-0 h-full w-1 bg-gradient-to-b from-primary-200 via-primary-400 to-primary-600 dark:from-primary-800 dark:via-primary-600 dark:to-primary-400 lg:transform lg:-translate-x-1/2"></div>
                 
                 <div className="space-y-12 lg:space-y-16">
-                  {milestones.map((milestone: any, index: number) => {
-                    // eslint-disable-next-line react-hooks/rules-of-hooks
-                    const { elementRef, isInView } = useScrollAnimation({
-                      threshold: 0.3,
-                      rootMargin: '0px 0px -100px 0px'
-                    })
-                    
-                    return (
-                      <div 
-                        ref={elementRef}
-                        key={milestone.id} 
-                        className={`relative flex items-start lg:items-center transition-all duration-700 transform ${
-                          isInView 
-                            ? 'opacity-100 translate-y-0 scale-100' 
-                            : 'opacity-0 translate-y-8 scale-95'
-                        }`}
-                        style={{ 
-                          transitionDelay: isInView ? `${index * 0.2}s` : '0s'
-                        }}
-                      >
-                      {/* Mobile Layout: Icon on left, content on right */}
-                      <div className="flex lg:hidden items-start w-full">
-                        {/* Mobile Timeline Icon - smaller size */}
-                        <div className={`flex h-12 w-12 items-center justify-center rounded-full ring-2 ring-white dark:ring-navy-900 hover-scale flex-shrink-0 ${
-                          index % 4 === 0 ? 'bg-blue-100 dark:bg-blue-900/20' :
-                          index % 4 === 1 ? 'bg-green-100 dark:bg-green-900/20' :
-                          index % 4 === 2 ? 'bg-purple-100 dark:bg-purple-900/20' :
-                          'bg-orange-100 dark:bg-orange-900/20'
-                        }`}>
-                          <Award className={`h-6 w-6 ${
-                            index % 4 === 0 ? 'text-blue-600 dark:text-blue-400' :
-                            index % 4 === 1 ? 'text-green-600 dark:text-green-400' :
-                            index % 4 === 2 ? 'text-purple-600 dark:text-purple-400' :
-                            'text-orange-600 dark:text-orange-400'
-                          }`} />
-                        </div>
-                        
-                        {/* Mobile Content - larger cards */}
-                        <div className="ml-6 flex-1">
-                          <div className="card p-6">
-                            <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                              <Calendar className="h-4 w-4" />
-                              <time>{formatDate(milestone.achievedOn)}</time>
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                              {milestone.title}
-                            </h3>
-                            {milestone.description && (
-                              <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                                {milestone.description}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Desktop Layout: Alternating sides with central icons */}
-                      <div className="hidden lg:flex lg:items-center lg:w-full lg:relative">
-                        {/* Content Card - alternating sides */}
-                        <div className={`w-5/12 ${
-                          index % 2 === 0 
-                            ? 'pr-8 lg:ml-0' 
-                            : 'pl-8 lg:ml-auto'
-                        }`}>
-                          <div className="card p-6">
-                            <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                              <Calendar className="h-4 w-4" />
-                              <time>{formatDate(milestone.achievedOn)}</time>
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                              {milestone.title}
-                            </h3>
-                            {milestone.description && (
-                              <p className="text-gray-600 dark:text-gray-300">
-                                {milestone.description}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        
-                        {/* Desktop Central Timeline Icon */}
-                        <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-                          <div className={`flex h-16 w-16 items-center justify-center rounded-full ring-4 ring-white dark:ring-navy-900 hover-scale ${
-                            index % 4 === 0 ? 'bg-blue-100 dark:bg-blue-900/20' :
-                            index % 4 === 1 ? 'bg-green-100 dark:bg-green-900/20' :
-                            index % 4 === 2 ? 'bg-purple-100 dark:bg-purple-900/20' :
-                            'bg-orange-100 dark:bg-orange-900/20'
-                          }`}>
-                            <Award className={`h-8 w-8 ${
-                              index % 4 === 0 ? 'text-blue-600 dark:text-blue-400' :
-                              index % 4 === 1 ? 'text-green-600 dark:text-green-400' :
-                              index % 4 === 2 ? 'text-purple-600 dark:text-purple-400' :
-                              'text-orange-600 dark:text-orange-400'
-                            }`} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    )
-                  })}
+                  {milestones.map((milestone: any, index: number) => (
+                    <MilestoneItem 
+                      key={milestone.id}
+                      milestone={milestone}
+                      index={index}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -243,29 +180,23 @@ export default function Impact() {
           </div>
           
           <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-white">2,850</div>
-              <div className="mt-2 text-primary-100">Students Currently Supported</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-white">85</div>
-              <div className="mt-2 text-primary-100">Partner Schools</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-white">15</div>
-              <div className="mt-2 text-primary-100">Districts Covered</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-white">94%</div>
-              <div className="mt-2 text-primary-100">Retention Rate</div>
-            </div>
-          </div>
-          
-          <div className="mt-12 text-center">
-            <p className="text-primary-200 max-w-3xl mx-auto">
-              Since our inception in 2018, we have supported over 12,500 children across 15 communities, 
-              with a 94% success rate in completing their education and transitioning to higher studies or vocational training.
-            </p>
+            {currentYearStats.map((stat, index) => (
+              <div 
+                key={stat.id} 
+                className="text-center animate-scale-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="text-4xl sm:text-5xl font-bold text-white mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-sm font-medium text-primary-100 mb-1">
+                  {stat.name}
+                </div>
+                <div className="text-xs text-primary-200 font-medium">
+                  {stat.change} this year
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
