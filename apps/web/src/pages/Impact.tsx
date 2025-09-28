@@ -7,6 +7,7 @@ import SectionHeader from '@/components/SectionHeader'
 import StoryCard from '@/components/StoryCard'
 import TestimonialCarousel from '@/components/TestimonialCarousel'
 import EmptyState from '@/components/EmptyState'
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 
 export default function Impact() {
   const { data: stories, isLoading: storiesLoading } = useQuery({
@@ -99,12 +100,26 @@ export default function Impact() {
                 <div className="absolute left-6 lg:left-1/2 top-0 h-full w-1 bg-gradient-to-b from-primary-200 via-primary-400 to-primary-600 dark:from-primary-800 dark:via-primary-600 dark:to-primary-400 lg:transform lg:-translate-x-1/2"></div>
                 
                 <div className="space-y-12 lg:space-y-16">
-                  {milestones.map((milestone: any, index: number) => (
-                    <div 
-                      key={milestone.id} 
-                      className="relative flex items-start lg:items-center animate-bounce-in"
-                      style={{ animationDelay: `${index * 0.2}s` }}
-                    >
+                  {milestones.map((milestone: any, index: number) => {
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    const { elementRef, isInView } = useScrollAnimation({
+                      threshold: 0.3,
+                      rootMargin: '0px 0px -100px 0px'
+                    })
+                    
+                    return (
+                      <div 
+                        ref={elementRef}
+                        key={milestone.id} 
+                        className={`relative flex items-start lg:items-center transition-all duration-700 transform ${
+                          isInView 
+                            ? 'opacity-100 translate-y-0 scale-100' 
+                            : 'opacity-0 translate-y-8 scale-95'
+                        }`}
+                        style={{ 
+                          transitionDelay: isInView ? `${index * 0.2}s` : '0s'
+                        }}
+                      >
                       {/* Mobile Layout: Icon on left, content on right */}
                       <div className="flex lg:hidden items-start w-full">
                         {/* Mobile Timeline Icon - smaller size */}
@@ -183,7 +198,8 @@ export default function Impact() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             </div>
