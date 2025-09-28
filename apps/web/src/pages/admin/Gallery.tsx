@@ -101,10 +101,7 @@ function GalleryForm({ image, onClose, onSuccess }: any) {
 
     setIsUploading(true)
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', selectedFile)
-      
-      const response = await uploadApi.uploadFile(uploadFormData)
+      const response = await uploadApi.uploadFile(selectedFile)
       const uploadedUrl = response.data.url
       
       setFormData({ ...formData, imageUrl: uploadedUrl })
@@ -252,12 +249,46 @@ function GalleryForm({ image, onClose, onSuccess }: any) {
               {/* Image Preview */}
               {previewUrl && (
                 <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview:</p>
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full max-w-xs h-48 object-cover rounded-lg mx-auto"
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview:</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedFile(null)
+                        setPreviewUrl(null)
+                        setFormData({ ...formData, imageUrl: '' })
+                        if (previewUrl.startsWith('blob:')) {
+                          URL.revokeObjectURL(previewUrl)
+                        }
+                      }}
+                      className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 flex items-center space-x-1"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span>Remove</span>
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-full max-w-xs h-48 object-cover rounded-lg mx-auto"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Reset file input and trigger file selection
+                        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+                        if (fileInput) {
+                          fileInput.value = ''
+                          fileInput.click()
+                        }
+                      }}
+                      className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow"
+                      title="Replace image"
+                    >
+                      <Upload className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -381,10 +412,7 @@ export default function AdminGallery() {
     setIsQuickUploading(true)
     try {
       // Upload file
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
-      
-      const uploadResponse = await uploadApi.uploadFile(uploadFormData)
+      const uploadResponse = await uploadApi.uploadFile(file)
       const imageUrl = uploadResponse.data.url
       
       // Create gallery image with filename as title
