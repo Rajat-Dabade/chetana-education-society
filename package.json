@@ -17,7 +17,6 @@
     "prisma:generate": "npm run prisma:generate --workspace=apps/api",
     "prisma:migrate": "npm run prisma:migrate --workspace=apps/api",
     "build:web": "cd apps/web && npm install && npm run build",
-    "build": "cd apps/api && npm install && npm run build",
     "start": "cd apps/api && npm start"
   },
   "devDependencies": {
