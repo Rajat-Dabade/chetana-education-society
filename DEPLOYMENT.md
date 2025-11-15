@@ -5,8 +5,10 @@ Complete step-by-step guide to deploy your NGO website on Hostinger VPS.
 ## 📋 Prerequisites
 
 - Hostinger VPS with root/SSH access
-- Domain name pointed to your VPS IP
+- VPS IP address (or domain name if you have one)
 - Basic knowledge of Linux commands
+
+> **Note:** You can deploy using your VPS IP address. You can add a domain later and update the configuration.
 
 ---
 
@@ -131,6 +133,24 @@ nano .env
 
 Add the following content:
 
+**If using IP address (no domain yet):**
+```env
+# Database
+DATABASE_URL="postgresql://chetana_user:your_secure_password_here@localhost:5432/chetana_education?schema=public"
+
+# JWT Secret (generate a strong random string)
+JWT_SECRET="your_super_secret_jwt_key_here_generate_random_string"
+
+# Server
+NODE_ENV=production
+PORT=4000
+
+# CORS (use your VPS IP address)
+FRONTEND_URL=http://YOUR_VPS_IP_ADDRESS
+# Example: FRONTEND_URL=http://123.45.67.89
+```
+
+**If using domain:**
 ```env
 # Database
 DATABASE_URL="postgresql://chetana_user:your_secure_password_here@localhost:5432/chetana_education?schema=public"
@@ -160,9 +180,18 @@ nano .env
 
 Add:
 
+**If using IP address (no domain yet):**
+```env
+VITE_API_URL=http://YOUR_VPS_IP_ADDRESS/api
+# Example: VITE_API_URL=http://123.45.67.89/api
+```
+
+**If using domain:**
 ```env
 VITE_API_URL=https://yourdomain.com/api
 ```
+
+> **Note:** Replace `YOUR_VPS_IP_ADDRESS` with your actual VPS IP (e.g., `123.45.67.89`)
 
 ---
 
@@ -282,6 +311,59 @@ sudo nano /etc/nginx/sites-available/chetana-education
 
 Add:
 
+**If using IP address (no domain yet):**
+```nginx
+# Frontend and API Server (using IP address)
+server {
+    listen 80;
+    server_name YOUR_VPS_IP_ADDRESS;  # Replace with your actual IP, e.g., 123.45.67.89
+
+    root /var/www/chetana-education-society/apps/web/dist;
+    index index.html;
+
+    # Serve static files
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # API proxy
+    location /api {
+        proxy_pass http://localhost:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        
+        # Increase timeouts for file uploads
+        proxy_connect_timeout 600;
+        proxy_send_timeout 600;
+        proxy_read_timeout 600;
+        send_timeout 600;
+        
+        # Increase body size for file uploads
+        client_max_body_size 50M;
+    }
+
+    # Serve uploaded files
+    location /uploads {
+        alias /var/www/chetana-education-society/apps/api/uploads;
+        expires 30d;
+        add_header Cache-Control "public";
+    }
+}
+```
+
+**If using domain:**
 ```nginx
 # API Server (Backend)
 server {
@@ -356,7 +438,9 @@ sudo systemctl restart nginx
 
 ---
 
-## 🔒 Step 8: Setup SSL with Let's Encrypt
+## 🔒 Step 8: Setup SSL with Let's Encrypt (Optional - Only if you have a domain)
+
+> **Note:** SSL certificates require a domain name. If you're using only IP address, skip this step. You can add SSL later when you get a domain.
 
 ### 8.1 Install Certbot
 
@@ -378,6 +462,19 @@ sudo certbot --nginx -d api.yourdomain.com
 sudo certbot renew --dry-run
 ```
 
+### 8.4 Adding Domain Later
+
+When you get a domain name:
+
+1. Point your domain to your VPS IP (A record)
+2. Update `.env` files:
+   - `apps/api/.env`: Change `FRONTEND_URL` to your domain
+   - `apps/web/.env`: Change `VITE_API_URL` to your domain
+3. Update Nginx config: Change `server_name` to your domain
+4. Rebuild frontend: `cd apps/web && npm run build`
+5. Restart services: `pm2 restart chetana-api && sudo systemctl reload nginx`
+6. Run certbot to get SSL certificate
+
 ---
 
 ## 📁 Step 9: Setup File Uploads Directory
@@ -391,7 +488,7 @@ chmod 755 /var/www/chetana-education-society/apps/api/uploads
 
 ### 9.2 Update Nginx to Serve Uploads
 
-Add to your Nginx config:
+> **Note:** This is already included in the Nginx config above. If you need to add it separately, add this to your server block:
 
 ```nginx
 # Serve uploaded files
@@ -496,15 +593,21 @@ psql -U chetana_user chetana_education < backup.sql
 
 1. **Check API Health:**
    ```bash
+   # If using IP:
+   curl http://YOUR_VPS_IP_ADDRESS/api/health
+   
+   # If using domain:
    curl https://yourdomain.com/api/health
    ```
 
 2. **Check Frontend:**
-   - Visit: `https://yourdomain.com`
+   - **If using IP:** Visit `http://YOUR_VPS_IP_ADDRESS` in your browser
+   - **If using domain:** Visit `https://yourdomain.com`
    - Should see your NGO website
 
 3. **Check Admin Login:**
-   - Visit: `https://yourdomain.com/admin/login`
+   - **If using IP:** Visit `http://YOUR_VPS_IP_ADDRESS/admin/login`
+   - **If using domain:** Visit `https://yourdomain.com/admin/login`
    - Login: `admin@ngo.org` / `ChangeMe123!`
 
 4. **Check File Uploads:**
@@ -587,15 +690,15 @@ chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
 - [ ] PostgreSQL installed and database created
 - [ ] Project cloned from GitHub
 - [ ] Dependencies installed
-- [ ] Environment variables configured
+- [ ] Environment variables configured (using IP or domain)
 - [ ] Prisma schema updated to PostgreSQL
 - [ ] Database schema pushed
 - [ ] Database seeded
 - [ ] API built
 - [ ] Frontend built
 - [ ] PM2 configured and API running
-- [ ] Nginx configured
-- [ ] SSL certificate installed
+- [ ] Nginx configured (for IP or domain)
+- [ ] SSL certificate installed (only if using domain)
 - [ ] File uploads directory created
 - [ ] Firewall configured
 - [ ] Everything tested and working
@@ -604,11 +707,56 @@ chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
 
 ## 🎉 You're Done!
 
-Your NGO website should now be live at `https://yourdomain.com`!
+Your NGO website should now be live!
+
+- **If using IP:** `http://YOUR_VPS_IP_ADDRESS`
+- **If using domain:** `https://yourdomain.com`
 
 For updates, simply run:
 ```bash
 cd /var/www/chetana-education-society
 ./deploy.sh
 ```
+
+---
+
+## 🌐 Adding a Domain Later
+
+When you purchase a domain:
+
+1. **Point domain to VPS:**
+   - Add A record: `@` → `YOUR_VPS_IP_ADDRESS`
+   - Add A record: `www` → `YOUR_VPS_IP_ADDRESS`
+
+2. **Update environment variables:**
+   ```bash
+   # Update apps/api/.env
+   FRONTEND_URL=https://yourdomain.com
+   
+   # Update apps/web/.env
+   VITE_API_URL=https://yourdomain.com/api
+   ```
+
+3. **Update Nginx config:**
+   ```bash
+   sudo nano /etc/nginx/sites-available/chetana-education
+   # Change server_name from IP to yourdomain.com
+   ```
+
+4. **Rebuild frontend:**
+   ```bash
+   cd /var/www/chetana-education-society/apps/web
+   npm run build
+   ```
+
+5. **Restart services:**
+   ```bash
+   pm2 restart chetana-api
+   sudo systemctl reload nginx
+   ```
+
+6. **Get SSL certificate:**
+   ```bash
+   sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+   ```
 
