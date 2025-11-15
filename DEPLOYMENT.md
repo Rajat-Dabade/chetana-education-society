@@ -99,6 +99,54 @@ cd /var/www
 
 ### 3.2 Clone Repository
 
+**Option 1: Using Personal Access Token (Recommended for VPS)**
+
+1. **Create a GitHub Personal Access Token:**
+   - Go to: https://github.com/settings/tokens
+   - Click "Generate new token" → "Generate new token (classic)"
+   - Name: "VPS Deployment"
+   - Select scopes: `repo` (full control of private repositories)
+   - Click "Generate token"
+   - **Copy the token immediately** (you won't see it again!)
+
+2. **Clone using token:**
+   ```bash
+   git clone https://YOUR_TOKEN@github.com/Rajat-Dabade/chetana-education-society.git
+   cd chetana-education-society
+   ```
+   Replace `YOUR_TOKEN` with your actual token.
+
+**Option 2: Using SSH Keys (More Secure)**
+
+1. **Generate SSH key on VPS:**
+   ```bash
+   ssh-keygen -t ed25519 -C "vps-deployment"
+   # Press Enter to accept default location
+   # Press Enter twice for no passphrase (or set one)
+   ```
+
+2. **Copy public key:**
+   ```bash
+   cat ~/.ssh/id_ed25519.pub
+   # Copy the entire output
+   ```
+
+3. **Add to GitHub:**
+   - Go to: https://github.com/settings/keys
+   - Click "New SSH key"
+   - Title: "VPS Server"
+   - Paste your public key
+   - Click "Add SSH key"
+
+4. **Clone using SSH:**
+   ```bash
+   git clone git@github.com:Rajat-Dabade/chetana-education-society.git
+   cd chetana-education-society
+   ```
+
+**Option 3: Clone Publicly (If repository is public)**
+
+If your repository is public, you can clone without authentication:
 ```bash
 git clone https://github.com/Rajat-Dabade/chetana-education-society.git
 cd chetana-education-society
@@ -519,6 +567,8 @@ set -e
 echo "🚀 Starting deployment..."
 
 # Pull latest changes
+# If using token: git pull https://YOUR_TOKEN@github.com/Rajat-Dabade/chetana-education-society.git main
+# If using SSH: git pull origin main
 git pull origin main
 
 # Install dependencies
