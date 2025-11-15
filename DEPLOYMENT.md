@@ -71,7 +71,32 @@ sudo -u postgres psql
 # In PostgreSQL prompt, run:
 CREATE DATABASE chetana_education;
 CREATE USER chetana_user WITH PASSWORD 'your_secure_password_here';
+
+# Grant all privileges on the database
 GRANT ALL PRIVILEGES ON DATABASE chetana_education TO chetana_user;
+
+# Grant schema permissions (important for Prisma)
+\c chetana_education
+GRANT ALL ON SCHEMA public TO chetana_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO chetana_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO chetana_user;
+
+# Make the user the owner of the schema (alternative approach)
+ALTER SCHEMA public OWNER TO chetana_user;
+
+\q
+```
+
+**If you already created the user and getting permission errors, run:**
+
+```bash
+sudo -u postgres psql -d chetana_education
+
+# Then run:
+GRANT ALL ON SCHEMA public TO chetana_user;
+ALTER SCHEMA public OWNER TO chetana_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO chetana_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO chetana_user;
 \q
 ```
 
