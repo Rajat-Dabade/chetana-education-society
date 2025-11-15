@@ -40,9 +40,14 @@ router.post('/login', async (req, res) => {
         email: user.email
       }
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Login error:', error);
-    res.status(500).json(formatError('Internal server error', 'INTERNAL_ERROR'));
+    console.error('Error stack:', error?.stack);
+    console.error('Error message:', error?.message);
+    res.status(500).json(formatError(
+      error?.message || 'Internal server error', 
+      'INTERNAL_ERROR'
+    ));
   }
 });
 
