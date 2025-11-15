@@ -11,7 +11,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,json}\"",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "seed": "ts-node src/seed.ts"
+    "seed": "ts-node src/seed.ts",
+    "cleanup": "ts-node src/cleanup-dummy-data.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.4.2",
