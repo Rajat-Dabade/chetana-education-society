@@ -1,8 +1,17 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 import { hashPassword } from './lib/auth';
 import { createSlug } from './lib/utils';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
+
+// Load JSON data files
+const dataDir = path.join(__dirname, 'data');
+const visionMission = JSON.parse(fs.readFileSync(path.join(dataDir, 'vision-mission.json'), 'utf-8'));
+const founderStory = JSON.parse(fs.readFileSync(path.join(dataDir, 'founder-story.json'), 'utf-8'));
+const navodayaAchievers = JSON.parse(fs.readFileSync(path.join(dataDir, 'navodaya-achievers.json'), 'utf-8'));
+const successStories = JSON.parse(fs.readFileSync(path.join(dataDir, 'success-stories.json'), 'utf-8'));
 
 async function main() {
   console.log('🌱 Starting database seed...');
@@ -19,20 +28,28 @@ async function main() {
   });
   console.log('✅ Created admin user');
 
-  // Create site settings
+  // Create site settings with vision, mission, and founder story
   await prisma.siteSetting.upsert({
     where: { id: 1 },
     update: {
       siteName: 'Chetana Education Society',
-      primaryHex: '#0038B8'
+      primaryHex: '#0038B8',
+      vision: visionMission.vision,
+      mission: JSON.stringify(visionMission.mission),
+      founderStory: founderStory.content,
+      whoWeAre: founderStory.whoWeAre
     },
     create: {
       id: 1,
       siteName: 'Chetana Education Society',
-      primaryHex: '#0038B8'
+      primaryHex: '#0038B8',
+      vision: visionMission.vision,
+      mission: JSON.stringify(visionMission.mission),
+      founderStory: founderStory.content,
+      whoWeAre: founderStory.whoWeAre
     }
   });
-  console.log('✅ Created site settings');
+  console.log('✅ Created site settings with vision, mission, and founder story');
 
   // Create testimonials
   const testimonials = [
@@ -123,6 +140,24 @@ for (const story of stories) {
     await prisma.successStory.create({ data: story });
   }
 }
+
+// Add success stories from JSON files
+for (const story of successStories.stories) {
+  const existing = await prisma.successStory.findFirst({
+    where: { slug: story.slug }
+  });
+  
+  if (!existing) {
+    await prisma.successStory.create({ 
+      data: {
+        title: story.title,
+        slug: story.slug,
+        excerpt: story.excerpt,
+        content: story.content
+      }
+    });
+  }
+}
 console.log('✅ Created success stories');
 
   // Create milestones
@@ -153,6 +188,17 @@ console.log('✅ Created success stories');
       achievedOn: new Date('2023-12-01')
     }
   ];
+
+  // Add Navodaya achievers as milestones
+  for (const achiever of navodayaAchievers.achievers) {
+    const yearParts = achiever.year.split('-');
+    const year = parseInt(yearParts[0]);
+    milestones.push({
+      title: `${achiever.name} - Navodaya Achiever`,
+      description: `Selected for Jawahar Navodaya Vidyalaya in ${achiever.year}`,
+      achievedOn: new Date(`${year}-06-01`)
+    });
+  }
 
   for (const milestone of milestones) {
     const existing = await prisma.milestone.findFirst({

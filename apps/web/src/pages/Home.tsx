@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Users, Heart, Globe, Star } from 'lucide-react'
-import { impactApi, blogApi } from '@/lib/api'
+import { impactApi, blogApi, settingsApi } from '@/lib/api'
 import { formatDate } from '@/lib/utils'
 import Hero from '@/components/Hero'
 import TestimonialCarousel from '@/components/TestimonialCarousel'
@@ -56,8 +56,14 @@ export default function Home() {
     queryFn: () => blogApi.getBlogs({ limit: 3 }).then(res => res.data)
   })
 
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => settingsApi.getSettings().then(res => res.data)
+  })
+
   const featuredStory = stories?.[0]
   const featuredBlog = blogs?.items?.[0]
+  const whoWeAre = settings?.whoWeAre
 
   return (
     <div className="animate-fade-in">
@@ -141,66 +147,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-24 bg-gray-50 dark:bg-navy-950">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
-            <div className="lg:pr-8 lg:pt-4">
-              <div className="lg:max-w-lg">
-                <h2 className="text-base font-semibold leading-7 text-primary-600 dark:text-primary-400">
-                  About Our Mission
-                </h2>
-                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  Building Stronger Communities
-                </p>
-                <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-                  Hope for Tomorrow was founded with a simple yet powerful belief: every person deserves 
-                  access to opportunities that can transform their life and strengthen their community.
-                </p>
-                <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 dark:text-gray-300 lg:max-w-none">
-                  <div className="relative pl-9">
-                    <dt className="inline font-semibold text-gray-900 dark:text-white">
-                      <Star className="absolute left-1 top-1 h-5 w-5 text-primary-600" aria-hidden="true" />
-                      Education First.
-                    </dt>
-                    <dd className="inline">
-                      We believe education is the foundation for breaking cycles of poverty and 
-                      building sustainable futures.
-                    </dd>
+      {/* Who We Are Section */}
+      {whoWeAre && (
+        <section className="py-24 bg-gray-50 dark:bg-navy-950">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
+              <div className="lg:pr-8 lg:pt-4">
+                <div className="lg:max-w-lg">
+                  <h2 className="text-base font-semibold leading-7 text-primary-600 dark:text-primary-400">
+                    Who We Are
+                  </h2>
+                  <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                    Building Stronger Communities
+                  </p>
+                  <div className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                    {whoWeAre}
                   </div>
-                  <div className="relative pl-9">
-                    <dt className="inline font-semibold text-gray-900 dark:text-white">
-                      <Star className="absolute left-1 top-1 h-5 w-5 text-primary-600" aria-hidden="true" />
-                      Community-Driven.
-                    </dt>
-                    <dd className="inline">
-                      Our programs are designed with and led by the communities we serve, 
-                      ensuring sustainable impact.
-                    </dd>
-                  </div>
-                  <div className="relative pl-9">
-                    <dt className="inline font-semibold text-gray-900 dark:text-white">
-                      <Star className="absolute left-1 top-1 h-5 w-5 text-primary-600" aria-hidden="true" />
-                      Transparent Impact.
-                    </dt>
-                    <dd className="inline">
-                      We measure and share our impact openly, ensuring every donation creates 
-                      meaningful change.
-                    </dd>
-                  </div>
-                </dl>
+                </div>
               </div>
+              <img
+                src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop"
+                alt="Community volunteers working together"
+                className="w-full max-w-full rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover"
+                width={800}
+                height={600}
+              />
             </div>
-            <img
-              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop"
-              alt="Community volunteers working together"
-              className="w-full max-w-full rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover"
-              width={800}
-              height={600}
-            />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Featured Content */}
       <section className="py-24 bg-white dark:bg-navy-900">

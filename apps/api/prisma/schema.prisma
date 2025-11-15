@@ -88,8 +88,12 @@ model GalleryImage {
 }
 
 model SiteSetting {
-  id         Int     @id @default(1)
-  siteName   String  @default("Our NGO")
-  primaryHex String  @default("#0038B8")
-  logoUrl    String?
+  id          Int     @id @default(1)
+  siteName    String  @default("Our NGO")
+  primaryHex  String  @default("#0038B8")
+  logoUrl     String?
+  vision      String?
+  mission     String? // JSON array of mission points
+  founderStory String?
+  whoWeAre    String?
 }

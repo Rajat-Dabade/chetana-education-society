@@ -1,24 +1,8 @@
+import { useQuery } from '@tanstack/react-query'
 import { Eye, Target, Lightbulb, Heart, UserCheck, Leaf } from 'lucide-react'
 import Hero from '@/components/Hero'
 import SectionHeader from '@/components/SectionHeader'
-
-const values = [
-  {
-    name: 'Vision',
-    description: 'To create a knowledgeable and empowered society where every child, regardless of their background, has access to quality education that transforms their life and strengthens their community.',
-    icon: Eye,
-  },
-  {
-    name: 'Mission',
-    description: 'Ensuring education of deprived children by connecting passionate volunteers, leveraging technology, and working with communities to provide quality learning opportunities that break cycles of poverty.',
-    icon: Target,
-  },
-  {
-    name: 'Values',
-    description: 'We believe in selfless service, passionate commitment to education, unwavering integrity, and relentless execution of programs that create measurable impact in children\'s lives.',
-    icon: Lightbulb,
-  },
-]
+import { settingsApi } from '@/lib/api'
 
 const principles = [
   {
@@ -39,6 +23,33 @@ const principles = [
 ]
 
 export default function About() {
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => settingsApi.getSettings().then(res => res.data)
+  })
+
+  const vision = settings?.vision || 'To create a knowledgeable and empowered society where every child, regardless of their background, has access to quality education that transforms their life and strengthens their community.'
+  const missionArray = settings?.mission ? JSON.parse(settings.mission) : ['Ensuring education of deprived children by connecting passionate volunteers, leveraging technology, and working with communities to provide quality learning opportunities that break cycles of poverty.']
+  const founderStory = settings?.founderStory || 'Our organization was founded with a vision to empower communities through quality education and sustainable development.'
+
+  const values = [
+    {
+      name: 'Vision',
+      description: vision,
+      icon: Eye,
+    },
+    {
+      name: 'Mission',
+      description: missionArray.join(' '),
+      icon: Target,
+      missionPoints: missionArray,
+    },
+    {
+      name: 'Values',
+      description: 'We believe in selfless service, passionate commitment to education, unwavering integrity, and relentless execution of programs that create measurable impact in children\'s lives.',
+      icon: Lightbulb,
+    },
+  ]
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
@@ -77,9 +88,20 @@ export default function About() {
                     }`}></div>
                   </div>
                   
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
-                    {value.description}
-                  </p>
+                  {value.name === 'Mission' && value.missionPoints ? (
+                    <ul className="text-gray-600 dark:text-gray-300 leading-relaxed mb-8 space-y-3">
+                      {value.missionPoints.map((point: string, idx: number) => (
+                        <li key={idx} className="flex items-start">
+                          <span className="text-primary-600 dark:text-primary-400 mr-2">•</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+                      {value.description}
+                    </p>
+                  )}
                   
                   {/* Key aspects as colored oval badges - matching your reference */}
                   <div className="space-y-2">
@@ -101,12 +123,12 @@ export default function About() {
                       <>
                         <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
                           <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
-                          Global Volunteers
+                          Reaching the Unreached
                         </div>
                         <br />
                         <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
-                          Technology Integration
+                          Transforming Lives
                         </div>
                       </>
                     )}
@@ -132,37 +154,24 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-24 bg-white dark:bg-navy-900">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start">
-            <div className="lg:pr-4 lg:pt-4">
-              <div className="lg:max-w-lg">
-                <h2 className="text-base font-semibold leading-7 text-primary-600 dark:text-primary-400">
-                  Our Story
-                </h2>
-                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  Founded on Hope
-                </p>
-                <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-                  Hope for Tomorrow was born from a simple observation: when communities have access to 
-                  education, emergency support, and sustainable development opportunities, they don't just 
-                  survive—they thrive.
-                </p>
-                <p className="mt-6 text-base leading-7 text-gray-600 dark:text-gray-300">
-                  Founded in 2018 by a group of educators, social workers, and community organizers, 
-                  our organization began with a single scholarship program. Today, we've grown to serve 
-                  thousands of individuals across multiple communities, but our core commitment remains 
-                  the same: authentic partnership with the communities we serve.
-                </p>
-                <p className="mt-6 text-base leading-7 text-gray-600 dark:text-gray-300">
-                  We believe that lasting change happens when communities have the resources and support 
-                  they need to solve their own challenges. That's why we focus on building local capacity, 
-                  supporting community leaders, and ensuring that our programs are sustainable long after 
-                  our direct involvement ends.
-                </p>
+      {/* Founder Story */}
+      {founderStory && (
+        <section className="py-24 bg-white dark:bg-navy-900">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start">
+              <div className="lg:pr-4 lg:pt-4">
+                <div className="lg:max-w-lg">
+                  <h2 className="text-base font-semibold leading-7 text-primary-600 dark:text-primary-400">
+                    Our Story
+                  </h2>
+                  <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                    The Journey of Our Founder
+                  </p>
+                  <div className="mt-6 text-base leading-7 text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                    {founderStory}
+                  </div>
+                </div>
               </div>
-            </div>
             <div className="sm:px-6 lg:px-0">
               <div className="relative isolate overflow-hidden bg-primary-600 px-6 pt-8 sm:mx-auto sm:max-w-2xl sm:rounded-3xl sm:pl-16 sm:pr-0 sm:pt-16 lg:mx-0 lg:max-w-none">
                 <div
@@ -187,7 +196,7 @@ export default function About() {
           </div>
         </div>
       </section>
-
+      )}
 
       {/* Our Principles */}
       <section className="py-24 bg-gray-50 dark:bg-navy-950">
