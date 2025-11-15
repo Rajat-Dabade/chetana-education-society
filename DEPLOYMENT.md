@@ -1,0 +1,614 @@
+# 🚀 Deployment Guide for Hostinger VPS
+
+Complete step-by-step guide to deploy your NGO website on Hostinger VPS.
+
+## 📋 Prerequisites
+
+- Hostinger VPS with root/SSH access
+- Domain name pointed to your VPS IP
+- Basic knowledge of Linux commands
+
+---
+
+## 🔧 Step 1: Initial Server Setup
+
+### 1.1 Connect to Your VPS
+
+```bash
+ssh root@your-vps-ip
+# or
+ssh root@your-domain.com
+```
+
+### 1.2 Update System
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+### 1.3 Install Required Software
+
+```bash
+# Install Node.js 20.x (LTS)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Install PostgreSQL
+sudo apt install -y postgresql postgresql-contrib
+
+# Install Nginx
+sudo apt install -y nginx
+
+# Install PM2 (Process Manager)
+sudo npm install -g pm2
+
+# Install Git
+sudo apt install -y git
+
+# Install Build Tools (for native modules)
+sudo apt install -y build-essential
+
+# Verify installations
+node --version  # Should show v20.x.x
+npm --version
+psql --version
+nginx -v
+pm2 --version
+```
+
+---
+
+## 🗄️ Step 2: Database Setup (PostgreSQL)
+
+### 2.1 Create PostgreSQL Database and User
+
+```bash
+# Switch to postgres user
+sudo -u postgres psql
+
+# In PostgreSQL prompt, run:
+CREATE DATABASE chetana_education;
+CREATE USER chetana_user WITH PASSWORD 'your_secure_password_here';
+GRANT ALL PRIVILEGES ON DATABASE chetana_education TO chetana_user;
+\q
+```
+
+### 2.2 Update Prisma Schema for PostgreSQL
+
+**Important:** Change the database provider in `apps/api/prisma/schema.prisma`:
+
+```prisma
+datasource db {
+  provider = "postgresql"  // Change from "sqlite" to "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+---
+
+## 📦 Step 3: Clone and Setup Project
+
+### 3.1 Create Application Directory
+
+```bash
+mkdir -p /var/www
+cd /var/www
+```
+
+### 3.2 Clone Repository
+
+```bash
+git clone https://github.com/Rajat-Dabade/chetana-education-society.git
+cd chetana-education-society
+```
+
+### 3.3 Install Dependencies
+
+```bash
+# Install root dependencies
+npm install
+
+# Install API dependencies
+cd apps/api
+npm install
+
+# Install Web dependencies
+cd ../web
+npm install
+cd ../..
+```
+
+---
+
+## 🔐 Step 4: Environment Variables
+
+### 4.1 Create API Environment File
+
+```bash
+cd /var/www/chetana-education-society/apps/api
+nano .env
+```
+
+Add the following content:
+
+```env
+# Database
+DATABASE_URL="postgresql://chetana_user:your_secure_password_here@localhost:5432/chetana_education?schema=public"
+
+# JWT Secret (generate a strong random string)
+JWT_SECRET="your_super_secret_jwt_key_here_generate_random_string"
+
+# Server
+NODE_ENV=production
+PORT=4000
+
+# CORS (your domain)
+FRONTEND_URL=https://yourdomain.com
+```
+
+**Generate JWT Secret:**
+```bash
+openssl rand -base64 32
+```
+
+### 4.2 Create Web Environment File
+
+```bash
+cd /var/www/chetana-education-society/apps/web
+nano .env
+```
+
+Add:
+
+```env
+VITE_API_URL=https://yourdomain.com/api
+```
+
+---
+
+## 🏗️ Step 5: Build and Setup Database
+
+### 5.1 Update Prisma Schema for PostgreSQL
+
+```bash
+cd /var/www/chetana-education-society/apps/api
+# Edit prisma/schema.prisma and change provider to "postgresql"
+nano prisma/schema.prisma
+```
+
+### 5.2 Generate Prisma Client and Push Schema
+
+```bash
+cd /var/www/chetana-education-society/apps/api
+npm run prisma:generate
+npx prisma db push
+```
+
+### 5.3 Seed Database
+
+```bash
+npm run seed
+```
+
+This will create:
+- Admin user (admin@ngo.org / ChangeMe123!)
+- Site settings with vision, mission, founder story
+- Success stories (Mahi Rajarkar, Vidhi Lokhande)
+- Navodaya achievers as milestones
+
+### 5.4 Build API
+
+```bash
+cd /var/www/chetana-education-society/apps/api
+npm run build
+```
+
+### 5.5 Build Frontend
+
+```bash
+cd /var/www/chetana-education-society/apps/web
+npm run build
+```
+
+---
+
+## 🚀 Step 6: Setup PM2 for API
+
+### 6.1 Create PM2 Ecosystem File
+
+```bash
+cd /var/www/chetana-education-society
+nano ecosystem.config.js
+```
+
+Add:
+
+```javascript
+module.exports = {
+  apps: [{
+    name: 'chetana-api',
+    script: './apps/api/dist/index.js',
+    cwd: '/var/www/chetana-education-society',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 4000
+    },
+    error_file: './logs/api-error.log',
+    out_file: './logs/api-out.log',
+    log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+    merge_logs: true,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G'
+  }]
+}
+```
+
+### 6.2 Create Logs Directory
+
+```bash
+mkdir -p /var/www/chetana-education-society/logs
+```
+
+### 6.3 Start API with PM2
+
+```bash
+cd /var/www/chetana-education-society
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
+# Follow the command it outputs to enable PM2 on system boot
+```
+
+### 6.4 Verify API is Running
+
+```bash
+pm2 status
+pm2 logs chetana-api
+curl http://localhost:4000/api/health
+```
+
+---
+
+## 🌐 Step 7: Configure Nginx
+
+### 7.1 Create Nginx Configuration
+
+```bash
+sudo nano /etc/nginx/sites-available/chetana-education
+```
+
+Add:
+
+```nginx
+# API Server (Backend)
+server {
+    listen 80;
+    server_name api.yourdomain.com;  # or yourdomain.com/api
+
+    location /api {
+        proxy_pass http://localhost:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        
+        # Increase timeouts for file uploads
+        proxy_connect_timeout 600;
+        proxy_send_timeout 600;
+        proxy_read_timeout 600;
+        send_timeout 600;
+        
+        # Increase body size for file uploads
+        client_max_body_size 50M;
+    }
+}
+
+# Frontend Server
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+
+    root /var/www/chetana-education-society/apps/web/dist;
+    index index.html;
+
+    # Serve static files
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # API proxy
+    location /api {
+        proxy_pass http://localhost:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        
+        client_max_body_size 50M;
+    }
+}
+```
+
+### 7.2 Enable Site
+
+```bash
+sudo ln -s /etc/nginx/sites-available/chetana-education /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+---
+
+## 🔒 Step 8: Setup SSL with Let's Encrypt
+
+### 8.1 Install Certbot
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+### 8.2 Get SSL Certificate
+
+```bash
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+# If using separate API subdomain:
+sudo certbot --nginx -d api.yourdomain.com
+```
+
+### 8.3 Auto-renewal (already configured by certbot)
+
+```bash
+sudo certbot renew --dry-run
+```
+
+---
+
+## 📁 Step 9: Setup File Uploads Directory
+
+### 9.1 Create Uploads Directory
+
+```bash
+mkdir -p /var/www/chetana-education-society/apps/api/uploads
+chmod 755 /var/www/chetana-education-society/apps/api/uploads
+```
+
+### 9.2 Update Nginx to Serve Uploads
+
+Add to your Nginx config:
+
+```nginx
+# Serve uploaded files
+location /uploads {
+    alias /var/www/chetana-education-society/apps/api/uploads;
+    expires 30d;
+    add_header Cache-Control "public";
+}
+```
+
+---
+
+## 🔄 Step 10: Setup Auto-Deployment (Optional)
+
+### 10.1 Create Deployment Script
+
+```bash
+cd /var/www/chetana-education-society
+nano deploy.sh
+```
+
+Add:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "🚀 Starting deployment..."
+
+# Pull latest changes
+git pull origin main
+
+# Install dependencies
+npm install
+cd apps/api && npm install && cd ..
+cd apps/web && npm install && cd ..
+
+# Build API
+cd apps/api
+npm run build
+cd ../..
+
+# Build Frontend
+cd apps/web
+npm run build
+cd ../..
+
+# Restart API
+pm2 restart chetana-api
+
+# Reload Nginx
+sudo systemctl reload nginx
+
+echo "✅ Deployment complete!"
+```
+
+Make it executable:
+
+```bash
+chmod +x deploy.sh
+```
+
+---
+
+## 🛠️ Step 11: Useful Commands
+
+### PM2 Commands
+
+```bash
+pm2 status              # Check status
+pm2 logs chetana-api    # View logs
+pm2 restart chetana-api # Restart API
+pm2 stop chetana-api    # Stop API
+pm2 delete chetana-api  # Remove from PM2
+```
+
+### Nginx Commands
+
+```bash
+sudo systemctl status nginx
+sudo systemctl restart nginx
+sudo systemctl reload nginx
+sudo nginx -t           # Test configuration
+```
+
+### Database Commands
+
+```bash
+# Connect to database
+sudo -u postgres psql -d chetana_education
+
+# Backup database
+pg_dump -U chetana_user chetana_education > backup.sql
+
+# Restore database
+psql -U chetana_user chetana_education < backup.sql
+```
+
+---
+
+## 🔍 Step 12: Verify Everything Works
+
+1. **Check API Health:**
+   ```bash
+   curl https://yourdomain.com/api/health
+   ```
+
+2. **Check Frontend:**
+   - Visit: `https://yourdomain.com`
+   - Should see your NGO website
+
+3. **Check Admin Login:**
+   - Visit: `https://yourdomain.com/admin/login`
+   - Login: `admin@ngo.org` / `ChangeMe123!`
+
+4. **Check File Uploads:**
+   - Login to admin panel
+   - Try uploading an image
+   - Verify it's accessible
+
+---
+
+## 🐛 Troubleshooting
+
+### API Not Starting
+
+```bash
+# Check logs
+pm2 logs chetana-api
+
+# Check if port is in use
+sudo lsof -i :4000
+
+# Restart PM2
+pm2 restart chetana-api
+```
+
+### Database Connection Issues
+
+```bash
+# Check PostgreSQL is running
+sudo systemctl status postgresql
+
+# Test connection
+psql -U chetana_user -d chetana_education -h localhost
+```
+
+### Nginx Errors
+
+```bash
+# Check error logs
+sudo tail -f /var/log/nginx/error.log
+
+# Test configuration
+sudo nginx -t
+```
+
+### Permission Issues
+
+```bash
+# Fix uploads directory permissions
+sudo chown -R $USER:$USER /var/www/chetana-education-society/apps/api/uploads
+chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
+```
+
+---
+
+## 📝 Important Notes
+
+1. **Change Admin Password:** After first login, change the default password (`ChangeMe123!`) through the admin panel.
+
+2. **Database Backups:** Set up regular backups:
+   ```bash
+   # Add to crontab (daily backup at 2 AM)
+   0 2 * * * pg_dump -U chetana_user chetana_education > /var/backups/chetana_$(date +\%Y\%m\%d).sql
+   ```
+
+3. **Firewall:** Make sure ports 80, 443, and 22 are open:
+   ```bash
+   sudo ufw allow 22
+   sudo ufw allow 80
+   sudo ufw allow 443
+   sudo ufw enable
+   ```
+
+4. **Update Prisma Schema:** Remember to change `provider = "sqlite"` to `provider = "postgresql"` in `apps/api/prisma/schema.prisma` before deployment.
+
+---
+
+## ✅ Deployment Checklist
+
+- [ ] Node.js 20.x installed
+- [ ] PostgreSQL installed and database created
+- [ ] Project cloned from GitHub
+- [ ] Dependencies installed
+- [ ] Environment variables configured
+- [ ] Prisma schema updated to PostgreSQL
+- [ ] Database schema pushed
+- [ ] Database seeded
+- [ ] API built
+- [ ] Frontend built
+- [ ] PM2 configured and API running
+- [ ] Nginx configured
+- [ ] SSL certificate installed
+- [ ] File uploads directory created
+- [ ] Firewall configured
+- [ ] Everything tested and working
+
+---
+
+## 🎉 You're Done!
+
+Your NGO website should now be live at `https://yourdomain.com`!
+
+For updates, simply run:
+```bash
+cd /var/www/chetana-education-society
+./deploy.sh
+```
+
