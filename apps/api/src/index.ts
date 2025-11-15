@@ -29,15 +29,37 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://chetana-education-society-api.vercel.app',
-    'https://*.vercel.app',
-    'https://*.netlify.app',
-    'https://*.netlify.com',
-    'https://chetana-education-society.netlify.app'
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // List of allowed origins
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'https://chetana-education-society-api.vercel.app',
+      'https://*.vercel.app',
+      'https://*.netlify.app',
+      'https://*.netlify.com',
+      'https://chetana-education-society.netlify.app'
+    ];
+    
+    // Allow IP addresses (for VPS deployment without domain)
+    const isIPAddress = /^http:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(origin);
+    
+    // Check if origin matches allowed patterns or is an IP address
+    if (allowedOrigins.some(allowed => {
+      if (allowed.includes('*')) {
+        const pattern = allowed.replace(/\*/g, '.*');
+        return new RegExp(`^${pattern}$`).test(origin);
+      }
+      return allowed === origin;
+    }) || isIPAddress) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
