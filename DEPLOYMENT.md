@@ -348,10 +348,16 @@ module.exports = {
 }
 ```
 
-### 6.2 Create Logs Directory
+### 6.2 Create Logs and Uploads Directories
 
 ```bash
+# Create logs directory
 mkdir -p /var/www/chetana-education-society/logs
+
+# Create uploads directory with proper permissions
+mkdir -p /var/www/chetana-education-society/apps/api/uploads
+chmod 755 /var/www/chetana-education-society/apps/api/uploads
+chown -R $USER:$USER /var/www/chetana-education-society/apps/api/uploads
 ```
 
 ### 6.3 Start API with PM2
@@ -405,6 +411,19 @@ server {
         add_header Cache-Control "public, immutable";
     }
 
+    # Serve uploaded files (MUST come before /api to avoid conflicts)
+    location /uploads {
+        alias /var/www/chetana-education-society/apps/api/uploads;
+        expires 30d;
+        add_header Cache-Control "public";
+        
+        # Allow access to uploaded files
+        access_log off;
+        
+        # Handle missing files
+        try_files $uri =404;
+    }
+
     # API proxy
     location /api {
         proxy_pass http://localhost:4000;
@@ -425,13 +444,6 @@ server {
         
         # Increase body size for file uploads
         client_max_body_size 50M;
-    }
-
-    # Serve uploaded files
-    location /uploads {
-        alias /var/www/chetana-education-society/apps/api/uploads;
-        expires 30d;
-        add_header Cache-Control "public";
     }
 }
 ```
@@ -484,6 +496,19 @@ server {
         add_header Cache-Control "public, immutable";
     }
 
+    # Serve uploaded files (MUST come before /api to avoid conflicts)
+    location /uploads {
+        alias /var/www/chetana-education-society/apps/api/uploads;
+        expires 30d;
+        add_header Cache-Control "public";
+        
+        # Allow access to uploaded files
+        access_log off;
+        
+        # Handle missing files
+        try_files $uri =404;
+    }
+
     # API proxy
     location /api {
         proxy_pass http://localhost:4000;
@@ -496,6 +521,13 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
         
+        # Increase timeouts for file uploads
+        proxy_connect_timeout 600;
+        proxy_send_timeout 600;
+        proxy_read_timeout 600;
+        send_timeout 600;
+        
+        # Increase body size for file uploads
         client_max_body_size 50M;
     }
 }
@@ -734,6 +766,49 @@ sudo nginx -t
 sudo chown -R $USER:$USER /var/www/chetana-education-society/apps/api/uploads
 chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
 ```
+
+### Uploads 404 Error
+
+If you get a 404 error when accessing uploaded images:
+
+1. **Verify uploads directory exists:**
+   ```bash
+   ls -la /var/www/chetana-education-society/apps/api/uploads
+   ```
+
+2. **Check nginx configuration:**
+   ```bash
+   # Make sure /uploads location is BEFORE /api in nginx config
+   sudo nano /etc/nginx/sites-available/chetana-education
+   # Verify the location /uploads block exists and comes before location /api
+   ```
+
+3. **Test nginx configuration:**
+   ```bash
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
+
+4. **Check file permissions:**
+   ```bash
+   # Ensure nginx can read the files
+   sudo chown -R www-data:www-data /var/www/chetana-education-society/apps/api/uploads
+   # OR if running as your user:
+   sudo chown -R $USER:$USER /var/www/chetana-education-society/apps/api/uploads
+   chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
+   ```
+
+5. **Verify the file was actually uploaded:**
+   ```bash
+   # Check if file exists after upload
+   ls -la /var/www/chetana-education-society/apps/api/uploads/
+   ```
+
+6. **Check nginx error logs:**
+   ```bash
+   sudo tail -f /var/log/nginx/error.log
+   # Try accessing the image URL and see what error appears
+   ```
 
 ---
 

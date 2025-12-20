@@ -9,7 +9,8 @@ import { generateUniqueFilename, validateFileType, formatError } from '../lib/ut
 const router = express.Router();
 
 // Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, '../../uploads');
+// Use absolute path for production, relative for development
+const uploadsDir = process.env.UPLOADS_DIR || path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }

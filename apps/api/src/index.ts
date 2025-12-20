@@ -90,7 +90,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploads)
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Use absolute path for production, relative for development
+const uploadsPath = process.env.UPLOADS_DIR || path.join(__dirname, '../uploads');
+app.use('/uploads', express.static(uploadsPath));
 
 // API routes  
 app.use('/api/auth', authRoutes); // Removed rate limiting for testing
