@@ -5,9 +5,15 @@ export async function setupDatabase() {
   try {
     console.log('🔍 Setting up database at runtime...');
     
-    // First, push schema to create tables
-    console.log('📦 Creating database tables...');
-    execSync('npx prisma db push --accept-data-loss', { 
+    // First, push schema to create/update tables
+    // Only use --accept-data-loss in development or if explicitly set
+    const acceptDataLoss = process.env.ACCEPT_DATA_LOSS === 'true';
+    const pushCommand = acceptDataLoss 
+      ? 'npx prisma db push --accept-data-loss'
+      : 'npx prisma db push';
+    
+    console.log('📦 Syncing database schema...');
+    execSync(pushCommand, { 
       stdio: 'inherit', 
       cwd: __dirname + '/..' 
     });

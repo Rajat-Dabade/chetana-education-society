@@ -978,6 +978,50 @@ cd /var/www/chetana-education-society
 ./deploy.sh
 ```
 
+## 📊 Data Preservation During Updates
+
+### ✅ What's Safe (Your Data is Preserved)
+
+1. **Running `./deploy.sh`**: 
+   - ✅ Only updates code, builds, and restarts the API
+   - ✅ Does NOT modify database schema
+   - ✅ Does NOT run seed script
+   - ✅ **All your existing data (blogs, news, milestones, uploads, etc.) is preserved**
+
+2. **Seed Script** (`npm run seed`):
+   - ✅ Uses `upsert` operations (updates if exists, creates if not)
+   - ✅ Checks for existing records before creating
+   - ✅ Only adds new data, never deletes existing data
+   - ✅ Safe to run multiple times
+
+### ⚠️ What to Watch Out For
+
+1. **Schema Changes**:
+   - If you modify the Prisma schema (add/remove columns, change types), the API startup will run `prisma db push`
+   - By default, this is **safe** and preserves data
+   - If you set `ACCEPT_DATA_LOSS=true` in environment, it may drop columns (data loss)
+   - **Recommendation**: Review schema changes carefully before deploying
+
+2. **Manual Database Operations**:
+   - Running `prisma db push --accept-data-loss` manually will cause data loss
+   - Always backup before major schema changes
+
+### 🔒 Best Practices
+
+1. **Backup before major updates**:
+   ```bash
+   pg_dump -U chetana_user chetana_education > backup_$(date +%Y%m%d).sql
+   ```
+
+2. **Test schema changes locally first**
+
+3. **Review what changed** before running deploy:
+   ```bash
+   git diff HEAD~1 apps/api/prisma/schema.prisma
+   ```
+
+**Summary**: Your existing data (blogs, news, milestones, uploads, admin content) will be preserved when running `./deploy.sh`. The script only updates code and restarts services.
+
 ---
 
 ## 🌐 Adding a Domain Later
