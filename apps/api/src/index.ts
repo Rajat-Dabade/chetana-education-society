@@ -91,7 +91,20 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploads)
 // Use absolute path for production, relative for development
-const uploadsPath = process.env.UPLOADS_DIR || path.join(__dirname, '../uploads');
+const getUploadsPath = () => {
+  if (process.env.UPLOADS_DIR) {
+    return path.resolve(process.env.UPLOADS_DIR);
+  }
+  // In production, resolve to absolute path
+  if (process.env.NODE_ENV === 'production') {
+    return path.resolve(__dirname, '../../uploads');
+  }
+  // In development, use relative path
+  return path.resolve(__dirname, '../uploads');
+};
+
+const uploadsPath = getUploadsPath();
+console.log(`📁 Serving uploads from: ${uploadsPath}`);
 app.use('/uploads', express.static(uploadsPath));
 
 // API routes  

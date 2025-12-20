@@ -218,6 +218,9 @@ JWT_SECRET="your_super_secret_jwt_key_here_generate_random_string"
 NODE_ENV=production
 PORT=4000
 
+# Uploads directory (absolute path - recommended for production)
+UPLOADS_DIR=/var/www/chetana-education-society/apps/api/uploads
+
 # CORS (use your VPS IP address)
 FRONTEND_URL=http://YOUR_VPS_IP_ADDRESS
 # Example: FRONTEND_URL=http://123.45.67.89
@@ -234,6 +237,9 @@ JWT_SECRET="your_super_secret_jwt_key_here_generate_random_string"
 # Server
 NODE_ENV=production
 PORT=4000
+
+# Uploads directory (absolute path - recommended for production)
+UPLOADS_DIR=/var/www/chetana-education-society/apps/api/uploads
 
 # CORS (your domain)
 FRONTEND_URL=https://yourdomain.com
