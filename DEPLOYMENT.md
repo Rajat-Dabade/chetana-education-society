@@ -606,9 +606,49 @@ location /uploads {
 
 ---
 
-## 🔄 Step 10: Setup Auto-Deployment (Optional)
+## 🔄 Step 10: Updating Your Application
 
-### 10.1 Create Deployment Script
+### Current Setup: Manual Deployment
+
+**By default, the VPS does NOT automatically pull code from GitHub.** You need to manually pull and deploy updates.
+
+### Option 1: Manual Deployment (Recommended for now)
+
+When you push code to GitHub, you need to manually update the VPS:
+
+```bash
+# SSH into your VPS
+ssh root@YOUR_VPS_IP
+
+# Navigate to project directory
+cd /var/www/chetana-education-society
+
+# Pull latest code
+git pull origin main
+
+# Run deployment script
+./deploy.sh
+```
+
+Or run the commands manually:
+
+```bash
+cd /var/www/chetana-education-society
+git pull origin main
+npm install
+cd apps/api && npm install && npm run build && cd ../..
+cd apps/web && npm install && npm run build && cd ../..
+pm2 restart chetana-api
+sudo systemctl reload nginx
+```
+
+### Option 2: Setup Auto-Deployment with GitHub Webhook (Advanced)
+
+For automatic deployment when you push to GitHub, you can set up a webhook:
+
+#### 10.1 Create Deployment Script
+
+The `deploy.sh` script should already exist. If not, create it:
 
 ```bash
 cd /var/www/chetana-education-society
@@ -632,6 +672,9 @@ git pull origin main
 npm install
 cd apps/api && npm install && cd ..
 cd apps/web && npm install && cd ..
+
+# Generate Prisma client
+npm run prisma:generate
 
 # Build API
 cd apps/api
@@ -657,6 +700,73 @@ Make it executable:
 ```bash
 chmod +x deploy.sh
 ```
+
+#### 10.2 Setup GitHub Webhook (Optional - Advanced)
+
+1. **Install a webhook receiver on your VPS:**
+   ```bash
+   npm install -g github-webhook-handler
+   ```
+
+2. **Create a webhook server script:**
+   ```bash
+   nano /var/www/chetana-education-society/webhook-server.js
+   ```
+   
+   Add:
+   ```javascript
+   const http = require('http');
+   const spawn = require('child_process').spawn;
+   const createHandler = require('github-webhook-handler');
+   
+   const handler = createHandler({ path: '/webhook', secret: 'your_webhook_secret_here' });
+   
+   http.createServer((req, res) => {
+     handler(req, res, (err) => {
+       res.statusCode = 404;
+       res.end('no such location');
+     });
+   }).listen(7777);
+   
+   handler.on('push', (event) => {
+     console.log('Received push event');
+     const deploy = spawn('sh', ['/var/www/chetana-education-society/deploy.sh']);
+     deploy.stdout.on('data', (data) => console.log(data.toString()));
+     deploy.stderr.on('data', (data) => console.error(data.toString()));
+   });
+   ```
+
+3. **Run webhook server with PM2:**
+   ```bash
+   pm2 start /var/www/chetana-education-society/webhook-server.js --name webhook
+   pm2 save
+   ```
+
+4. **Configure GitHub webhook:**
+   - Go to your GitHub repository → Settings → Webhooks
+   - Add webhook: `http://YOUR_VPS_IP:7777/webhook`
+   - Content type: `application/json`
+   - Secret: `your_webhook_secret_here`
+   - Events: Just the `push` event
+
+**Note:** For production, use HTTPS and secure the webhook endpoint properly.
+
+### Option 3: Simple Cron Job (Check for updates periodically)
+
+You can set up a cron job to automatically pull and deploy every hour/day:
+
+```bash
+# Edit crontab
+crontab -e
+
+# Add this line to check for updates every hour (at minute 0)
+0 * * * * cd /var/www/chetana-education-society && git fetch && git diff --quiet origin/main || ./deploy.sh
+
+# Or check once per day at 2 AM
+0 2 * * * cd /var/www/chetana-education-society && git fetch && git diff --quiet origin/main || ./deploy.sh
+```
+
+This will only deploy if there are new changes.
 
 ---
 
