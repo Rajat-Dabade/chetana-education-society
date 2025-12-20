@@ -28,7 +28,7 @@ if ! grep -q "location /uploads/" "$NGINX_CONFIG"; then
     echo "   IMPORTANT: Move /uploads location block to come BEFORE the regex location block:"
     echo ""
     echo "   # Serve uploaded files (MUST come FIRST - before regex locations)"
-    echo "   location /uploads/ {"
+    echo "   location ^~ /uploads/ {"
     echo "       alias /var/www/chetana-education-society/apps/api/uploads/;"
     echo "       expires 30d;"
     echo "       add_header Cache-Control \"public\";"

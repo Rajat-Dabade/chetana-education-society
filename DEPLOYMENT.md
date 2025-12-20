@@ -401,7 +401,8 @@ server {
     index index.html;
 
     # Serve uploaded files (MUST come FIRST - before regex locations)
-    location /uploads/ {
+    # This prefix location takes precedence over regex locations
+    location ^~ /uploads/ {
         alias /var/www/chetana-education-society/apps/api/uploads/;
         expires 30d;
         add_header Cache-Control "public";
@@ -418,12 +419,8 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Cache static assets (excludes /uploads path)
+    # Cache static assets (won't match /uploads/ because of ^~ above)
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        # Exclude uploads directory from this regex
-        if ($uri ~ ^/uploads/) {
-            break;
-        }
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -490,7 +487,8 @@ server {
     index index.html;
 
     # Serve uploaded files (MUST come FIRST - before regex locations)
-    location /uploads/ {
+    # This prefix location takes precedence over regex locations
+    location ^~ /uploads/ {
         alias /var/www/chetana-education-society/apps/api/uploads/;
         expires 30d;
         add_header Cache-Control "public";
@@ -507,12 +505,8 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Cache static assets (excludes /uploads path)
+    # Cache static assets (won't match /uploads/ because of ^~ above)
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        # Exclude uploads directory from this regex
-        if ($uri ~ ^/uploads/) {
-            break;
-        }
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -909,7 +903,8 @@ If you get a 404 error when accessing uploaded images, follow these steps:
    
    Make sure you have:
    ```nginx
-   location /uploads/ {
+   # Serve uploaded files (MUST come FIRST - before regex locations)
+   location ^~ /uploads/ {
        alias /var/www/chetana-education-society/apps/api/uploads/;
        expires 30d;
        add_header Cache-Control "public";
@@ -921,7 +916,10 @@ If you get a 404 error when accessing uploaded images, follow these steps:
    }
    ```
    
-   **Important**: The `/uploads/` location MUST come BEFORE `/api` location block.
+   **Important**: 
+   - The `/uploads/` location MUST come BEFORE the regex location block (for static assets)
+   - The `^~` prefix makes it take precedence over regex locations
+   - The `/uploads/` location MUST come BEFORE `/api` location block
 
 4. **Test and reload nginx:**
    ```bash
