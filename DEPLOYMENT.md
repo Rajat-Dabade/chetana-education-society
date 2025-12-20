@@ -412,16 +412,16 @@ server {
     }
 
     # Serve uploaded files (MUST come before /api to avoid conflicts)
-    location /uploads {
-        alias /var/www/chetana-education-society/apps/api/uploads;
+    location /uploads/ {
+        alias /var/www/chetana-education-society/apps/api/uploads/;
         expires 30d;
         add_header Cache-Control "public";
-        
-        # Allow access to uploaded files
         access_log off;
-        
-        # Handle missing files
-        try_files $uri =404;
+    }
+    
+    # Handle /uploads without trailing slash
+    location = /uploads {
+        return 301 /uploads/;
     }
 
     # API proxy
@@ -497,16 +497,16 @@ server {
     }
 
     # Serve uploaded files (MUST come before /api to avoid conflicts)
-    location /uploads {
-        alias /var/www/chetana-education-society/apps/api/uploads;
+    location /uploads/ {
+        alias /var/www/chetana-education-society/apps/api/uploads/;
         expires 30d;
         add_header Cache-Control "public";
-        
-        # Allow access to uploaded files
         access_log off;
-        
-        # Handle missing files
-        try_files $uri =404;
+    }
+    
+    # Handle /uploads without trailing slash
+    location = /uploads {
+        return 301 /uploads/;
     }
 
     # API proxy
