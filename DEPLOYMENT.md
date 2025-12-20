@@ -879,46 +879,82 @@ chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
 
 ### Uploads 404 Error
 
-If you get a 404 error when accessing uploaded images:
+If you get a 404 error when accessing uploaded images, follow these steps:
 
-1. **Verify uploads directory exists:**
+1. **Verify uploads directory exists and has files:**
    ```bash
    ls -la /var/www/chetana-education-society/apps/api/uploads
+   # Should show your uploaded files
    ```
 
-2. **Check nginx configuration:**
+2. **Check file permissions (CRITICAL):**
    ```bash
-   # Make sure /uploads location is BEFORE /api in nginx config
-   sudo nano /etc/nginx/sites-available/chetana-education
-   # Verify the location /uploads block exists and comes before location /api
+   # Nginx runs as www-data, so it needs read access
+   sudo chown -R www-data:www-data /var/www/chetana-education-society/apps/api/uploads
+   sudo chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
    ```
 
-3. **Test nginx configuration:**
+3. **Verify nginx configuration is correct:**
+   ```bash
+   sudo nano /etc/nginx/sites-available/chetana-education
+   ```
+   
+   Make sure you have:
+   ```nginx
+   location /uploads/ {
+       alias /var/www/chetana-education-society/apps/api/uploads/;
+       expires 30d;
+       add_header Cache-Control "public";
+       access_log off;
+   }
+   
+   location = /uploads {
+       return 301 /uploads/;
+   }
+   ```
+   
+   **Important**: The `/uploads/` location MUST come BEFORE `/api` location block.
+
+4. **Test and reload nginx:**
    ```bash
    sudo nginx -t
+   # If test passes:
    sudo systemctl reload nginx
    ```
 
-4. **Check file permissions:**
-   ```bash
-   # Ensure nginx can read the files
-   sudo chown -R www-data:www-data /var/www/chetana-education-society/apps/api/uploads
-   # OR if running as your user:
-   sudo chown -R $USER:$USER /var/www/chetana-education-society/apps/api/uploads
-   chmod -R 755 /var/www/chetana-education-society/apps/api/uploads
-   ```
-
-5. **Verify the file was actually uploaded:**
-   ```bash
-   # Check if file exists after upload
-   ls -la /var/www/chetana-education-society/apps/api/uploads/
-   ```
-
-6. **Check nginx error logs:**
+5. **Check nginx error logs in real-time:**
    ```bash
    sudo tail -f /var/log/nginx/error.log
-   # Try accessing the image URL and see what error appears
+   # Then try accessing the image URL in another terminal
+   # Look for permission denied or file not found errors
    ```
+
+6. **Test file access directly:**
+   ```bash
+   # Test if nginx can read the file
+   sudo -u www-data cat /var/www/chetana-education-society/apps/api/uploads/YOUR_FILENAME.png
+   # Replace YOUR_FILENAME.png with an actual uploaded file
+   ```
+
+7. **Check if file was actually uploaded:**
+   ```bash
+   # After uploading, verify file exists
+   ls -lh /var/www/chetana-education-society/apps/api/uploads/
+   # Check file size and permissions
+   ```
+
+8. **Alternative: Let API serve files directly (if nginx still fails):**
+   
+   If nginx continues to fail, you can proxy `/uploads` to the API:
+   ```nginx
+   location /uploads {
+       proxy_pass http://localhost:4000;
+       proxy_http_version 1.1;
+       proxy_set_header Host $host;
+   }
+   ```
+   
+   This makes the Express app serve the files instead of nginx.
 
 ---
 
