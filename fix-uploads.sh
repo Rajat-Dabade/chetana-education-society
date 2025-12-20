@@ -25,8 +25,9 @@ if ! grep -q "location /uploads/" "$NGINX_CONFIG"; then
     echo "⚠️  Nginx config needs updating. Please update it manually:"
     echo "   sudo nano $NGINX_CONFIG"
     echo ""
-    echo "   Replace the /uploads location block with:"
+    echo "   IMPORTANT: Move /uploads location block to come BEFORE the regex location block:"
     echo ""
+    echo "   # Serve uploaded files (MUST come FIRST - before regex locations)"
     echo "   location /uploads/ {"
     echo "       alias /var/www/chetana-education-society/apps/api/uploads/;"
     echo "       expires 30d;"
@@ -39,6 +40,9 @@ if ! grep -q "location /uploads/" "$NGINX_CONFIG"; then
     echo "   }"
     echo ""
     echo "   Then run: sudo nginx -t && sudo systemctl reload nginx"
+elif ! grep -A 5 "location /uploads/" "$NGINX_CONFIG" | grep -q "location /uploads/"; then
+    echo "⚠️  Nginx config has /uploads but may be in wrong order"
+    echo "   Make sure /uploads/ location comes BEFORE the regex location block"
 else
     echo "✅ Nginx config looks good"
 fi

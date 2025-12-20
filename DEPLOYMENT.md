@@ -400,18 +400,7 @@ server {
     root /var/www/chetana-education-society/apps/web/dist;
     index index.html;
 
-    # Serve static files
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Cache static assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # Serve uploaded files (MUST come before /api to avoid conflicts)
+    # Serve uploaded files (MUST come FIRST - before regex locations)
     location /uploads/ {
         alias /var/www/chetana-education-society/apps/api/uploads/;
         expires 30d;
@@ -422,6 +411,21 @@ server {
     # Handle /uploads without trailing slash
     location = /uploads {
         return 301 /uploads/;
+    }
+
+    # Serve static files
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache static assets (excludes /uploads path)
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        # Exclude uploads directory from this regex
+        if ($uri ~ ^/uploads/) {
+            break;
+        }
+        expires 1y;
+        add_header Cache-Control "public, immutable";
     }
 
     # API proxy
@@ -485,18 +489,7 @@ server {
     root /var/www/chetana-education-society/apps/web/dist;
     index index.html;
 
-    # Serve static files
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Cache static assets
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # Serve uploaded files (MUST come before /api to avoid conflicts)
+    # Serve uploaded files (MUST come FIRST - before regex locations)
     location /uploads/ {
         alias /var/www/chetana-education-society/apps/api/uploads/;
         expires 30d;
@@ -507,6 +500,21 @@ server {
     # Handle /uploads without trailing slash
     location = /uploads {
         return 301 /uploads/;
+    }
+
+    # Serve static files
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Cache static assets (excludes /uploads path)
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        # Exclude uploads directory from this regex
+        if ($uri ~ ^/uploads/) {
+            break;
+        }
+        expires 1y;
+        add_header Cache-Control "public, immutable";
     }
 
     # API proxy
