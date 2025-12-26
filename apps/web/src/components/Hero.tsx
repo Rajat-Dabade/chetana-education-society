@@ -24,14 +24,14 @@ export default function Hero({
   overlay = true
 }: HeroProps) {
   return (
-    <section className="relative bg-star-pattern">
+    <section className="relative bg-star-pattern min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh]">
       {/* Background Image */}
       {backgroundImage && (
         <div className="absolute inset-0">
           <img
             src={backgroundImage}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
           {overlay && (
             <div className="absolute inset-0 bg-gray-900/50 dark:bg-navy-950/60" />
@@ -40,7 +40,7 @@ export default function Hero({
       )}
 
       {/* Content */}
-      <div className="relative px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
+      <div className="relative px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40 min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] flex items-center">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl animate-slide-up">
             {title}

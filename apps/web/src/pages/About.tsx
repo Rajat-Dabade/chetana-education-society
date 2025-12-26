@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Eye, Target, Lightbulb, Heart, UserCheck, Leaf } from 'lucide-react'
+import { Eye, Target, Heart, UserCheck, Leaf } from 'lucide-react'
 import Hero from '@/components/Hero'
 import SectionHeader from '@/components/SectionHeader'
 import { settingsApi } from '@/lib/api'
@@ -44,11 +44,6 @@ export default function About() {
       icon: Target,
       missionPoints: missionArray,
     },
-    {
-      name: 'Values',
-      description: 'We believe in selfless service, passionate commitment to education, unwavering integrity, and relentless execution of programs that create measurable impact in children\'s lives.',
-      icon: Lightbulb,
-    },
   ]
   return (
     <div className="animate-fade-in">
@@ -68,7 +63,7 @@ export default function About() {
           />
 
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-            <div className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-8 lg:max-w-none lg:grid-cols-3">
+            <div className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-8 lg:max-w-4xl lg:grid-cols-2 lg:mx-auto">
               {values.map((value, index) => (
                 <div 
                   key={value.name} 
@@ -129,20 +124,6 @@ export default function About() {
                         <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
                           Transforming Lives
-                        </div>
-                      </>
-                    )}
-                    
-                    {value.name === 'Values' && (
-                      <>
-                        <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                          <span className="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
-                          Integrity
-                        </div>
-                        <br />
-                        <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300">
-                          <span className="w-2 h-2 rounded-full bg-violet-500 mr-2"></span>
-                          Measurable Impact
                         </div>
                       </>
                     )}

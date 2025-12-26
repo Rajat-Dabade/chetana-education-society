@@ -71,14 +71,6 @@ export default function Home() {
       <Hero
         title="Empowering Communities Through Education"
         subtitle="Our mission: Every child from disadvantaged communities completes quality education and becomes an empowered member of society. Together, we're building a future where education transforms lives."
-        primaryCTA={{
-          text: 'Sponsor a Child - ₹5,000/year',
-          href: '/donate'
-        }}
-        secondaryCTA={{
-          text: 'Join as Volunteer',
-          href: '/contact'
-        }}
         backgroundImage="https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=1920&h=1080&fit=crop"
       />
 
@@ -99,8 +91,38 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Who We Are Section */}
+      {whoWeAre && (
+        <section className="py-24 bg-white dark:bg-navy-900">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
+              <div className="lg:pr-8 lg:pt-4">
+                <div className="lg:max-w-lg">
+                  <h2 className="text-2xl sm:text-3xl font-semibold leading-7 text-primary-600 dark:text-primary-400 text-center">
+                    Who We Are
+                  </h2>
+                  <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                    Building Stronger Communities
+                  </p>
+                  <div className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                    {whoWeAre}
+                  </div>
+                </div>
+              </div>
+              <img
+                src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop"
+                alt="Community volunteers working together"
+                className="w-full max-w-full rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover"
+                width={800}
+                height={600}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Stats Section */}
-      <section className="py-12 sm:py-16 bg-white dark:bg-navy-900">
+      <section className="py-12 sm:py-16 bg-gray-50 dark:bg-navy-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className="text-center">
@@ -147,52 +169,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Who We Are Section */}
-      {whoWeAre && (
-        <section className="py-24 bg-gray-50 dark:bg-navy-950">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
-              <div className="lg:pr-8 lg:pt-4">
-                <div className="lg:max-w-lg">
-                  <h2 className="text-base font-semibold leading-7 text-primary-600 dark:text-primary-400">
-                    Who We Are
-                  </h2>
-                  <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                    Building Stronger Communities
-                  </p>
-                  <div className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 whitespace-pre-line">
-                    {whoWeAre}
-                  </div>
-                </div>
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop"
-                alt="Community volunteers working together"
-                className="w-full max-w-full rounded-xl shadow-xl ring-1 ring-gray-400/10 object-cover"
-                width={800}
-                height={600}
-              />
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Featured Content */}
-      <section className="py-24 bg-white dark:bg-navy-900">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <SectionHeader
-            title="Stories of Impact"
-            subtitle="Real stories from the communities we serve and the lives we've touched together."
-          />
+      <section className="py-24 bg-gradient-to-br from-primary-50 via-white to-primary-50 dark:from-navy-950 dark:via-navy-900 dark:to-navy-950 relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 opacity-5 dark:opacity-10">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-400 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-300 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center mb-4">
+              <div className="h-1 w-16 bg-primary-600 dark:bg-primary-400 rounded-full"></div>
+              <Heart className="mx-4 h-6 w-6 text-primary-600 dark:text-primary-400" />
+              <div className="h-1 w-16 bg-primary-600 dark:bg-primary-400 rounded-full"></div>
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
+              Stories of Impact
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Real stories from the communities we serve and the lives we've touched together.
+            </p>
+          </div>
 
           <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             {/* Featured Story */}
             <div className="lg:pr-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                Featured Success Story
-              </h3>
+              <div className="flex items-center mb-6">
+                <div className="h-10 w-1 bg-primary-600 dark:bg-primary-400 rounded-full mr-3"></div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Featured Success Story
+                </h3>
+              </div>
               {featuredStory ? (
-                <StoryCard story={featuredStory} featured />
+                <div className="transform hover:scale-[1.02] transition-transform duration-300">
+                  <StoryCard story={featuredStory} featured />
+                </div>
               ) : (
                 <EmptyState
                   title="No stories yet"
@@ -203,11 +215,14 @@ export default function Home() {
 
             {/* Featured Blog */}
             <div className="lg:pl-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
-                Latest from Our Blog
-              </h3>
+              <div className="flex items-center mb-6">
+                <div className="h-10 w-1 bg-primary-600 dark:bg-primary-400 rounded-full mr-3"></div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Latest from Our Blog
+                </h3>
+              </div>
               {featuredBlog ? (
-                <article className="card p-6">
+                <article className="card p-6 transform hover:scale-[1.02] transition-transform duration-300 border-2 border-primary-100 dark:border-primary-900/50 hover:border-primary-300 dark:hover:border-primary-700 shadow-lg hover:shadow-xl">
                   {featuredBlog.coverUrl && (
                     <img
                       src={featuredBlog.coverUrl}
@@ -228,10 +243,10 @@ export default function Home() {
                   </p>
                   <Link
                     to={`/blogs/${featuredBlog.slug}`}
-                    className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+                    className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium group"
                   >
                     Read more
-                    <ArrowRight className="ml-1 h-4 w-4" />
+                    <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </article>
               ) : (
@@ -243,13 +258,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-10 flex justify-center">
+          <div className="mt-12 flex justify-center">
             <Link
               to="/impact"
-              className="btn-outline"
+              className="btn-primary group text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               View All Impact Stories
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-5 w-5 inline group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
@@ -299,19 +314,24 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      {testimonials && testimonials.length > 0 && (
-        <section className="py-24 bg-gray-50 dark:bg-navy-950">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <SectionHeader
-              title="Voices from Our Community"
-              subtitle="Hear from the students, families, and volunteers whose lives have been transformed"
-            />
-            <div className="mt-16">
+      <section className="py-24 bg-gray-50 dark:bg-navy-950">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <SectionHeader
+            title="Voices from Our Community"
+            subtitle="Hear from the students, families, and volunteers whose lives have been transformed"
+          />
+          <div className="mt-16">
+            {testimonials && testimonials.length > 0 ? (
               <TestimonialCarousel testimonials={testimonials} />
-            </div>
+            ) : (
+              <EmptyState
+                title="No testimonials yet"
+                description="Check back soon to hear from our community members."
+              />
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   )
 }

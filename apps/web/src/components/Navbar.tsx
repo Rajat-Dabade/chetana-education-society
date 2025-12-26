@@ -32,7 +32,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white/98 dark:bg-navy-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-navy-950/60 border-b border-gray-100 dark:border-gray-800 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/98 dark:bg-navy-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-navy-950/60 border-b border-gray-100 dark:border-gray-800 shadow-sm">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 sm:p-6 lg:px-8" aria-label="Global">
         {/* Logo */}
         <div className="flex lg:flex-1">
