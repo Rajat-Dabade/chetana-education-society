@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Eye, EyeOff, Heart } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { authApi } from '@/lib/api'
 import { loginSchema, type LoginInput } from '@/lib/validations'
+import logo from '@/assets/logo.png'
 
 export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
@@ -50,10 +51,12 @@ export default function AdminLogin() {
         <div>
           {/* Logo */}
           <Link to="/" className="flex justify-center">
-            <div className="flex items-center space-x-2">
-              <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                <Heart className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-              </div>
+            <div className="flex items-center space-x-3">
+              <img 
+                src={logo} 
+                alt="Chetana Education Society Logo" 
+                className="h-14 w-14 object-contain"
+              />
               <span className="text-2xl font-bold text-gray-900 dark:text-white">
                 Chetana Education Society
               </span>

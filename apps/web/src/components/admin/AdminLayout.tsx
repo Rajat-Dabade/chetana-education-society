@@ -8,13 +8,13 @@ import {
   Image, 
   Settings, 
   LogOut,
-  Heart,
   Menu,
   X
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import BackToTop from '@/components/BackToTop'
+import logo from '@/assets/logo.png'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -75,9 +75,11 @@ export default function AdminLayout() {
       )}>
         <div className="flex items-center justify-between h-16 px-4 sm:px-6 border-b border-gray-200 dark:border-gray-700">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <Heart className="h-5 w-5 text-white" />
-            </div>
+            <img 
+              src={logo} 
+              alt="Chetana Education Society Logo" 
+              className="h-8 w-8 object-contain"
+            />
             <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
               Admin Panel
             </span>

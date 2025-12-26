@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Heart, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import logo from '@/assets/logo.png'
 
 const footerNavigation = {
   main: [
@@ -49,10 +50,12 @@ export default function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           {/* Brand section */}
           <div className="space-y-8">
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <Heart className="h-5 w-5 text-white" />
-              </div>
+            <div className="flex items-center space-x-3">
+              <img 
+                src={logo} 
+                alt="Chetana Education Society Logo" 
+                className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+              />
               <span className="text-lg sm:text-xl font-bold text-white">
                 Chetana Education Society
               </span>

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Sun, Moon, Heart } from 'lucide-react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
+import logo from '@/assets/logo.png'
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -36,10 +37,12 @@ export default function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 sm:p-6 lg:px-8" aria-label="Global">
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <Link to="/" className="-m-1.5 p-1.5 flex items-center space-x-2 group">
-            <div className="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 hover-scale">
-              <Heart className="h-5 w-5 text-white transition-all duration-300 group-hover:scale-110" />
-            </div>
+          <Link to="/" className="-m-1.5 p-1.5 flex items-center space-x-3 group">
+            <img 
+              src={logo} 
+              alt="Chetana Education Society Logo" 
+              className="h-10 w-10 sm:h-12 sm:w-12 object-contain transition-all duration-300 group-hover:scale-110"
+            />
             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
               Chetana Education Society
             </span>
