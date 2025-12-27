@@ -33,6 +33,9 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
+    // Get frontend URL from environment variable
+    const frontendUrl = process.env.FRONTEND_URL;
+    
     // List of allowed origins
     const allowedOrigins = [
       'http://localhost:5173',
@@ -44,8 +47,21 @@ app.use(cors({
       'https://chetana-education-society.netlify.app'
     ];
     
+    // Add frontend URL from environment if provided
+    if (frontendUrl) {
+      allowedOrigins.push(frontendUrl);
+      // Also add www version if main domain doesn't have www
+      if (!frontendUrl.includes('www.')) {
+        allowedOrigins.push(frontendUrl.replace(/^https?:\/\//, 'https://www.'));
+      }
+      // Also add non-www version if main domain has www
+      if (frontendUrl.includes('www.')) {
+        allowedOrigins.push(frontendUrl.replace(/^https?:\/\/www\./, 'https://'));
+      }
+    }
+    
     // Allow IP addresses (for VPS deployment without domain)
-    const isIPAddress = /^http:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(origin);
+    const isIPAddress = /^https?:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(origin);
     
     // Check if origin matches allowed patterns or is an IP address
     if (allowedOrigins.some(allowed => {
@@ -57,6 +73,8 @@ app.use(cors({
     }) || isIPAddress) {
       callback(null, true);
     } else {
+      console.log(`❌ CORS blocked origin: ${origin}`);
+      console.log(`✅ Allowed origins: ${allowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
