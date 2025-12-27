@@ -65,13 +65,30 @@ else
     echo "⚠️  PM2 not found, skipping API restart"
 fi
 
-# Reload Nginx (if available)
+# Reload Nginx (if available) - don't fail deployment if nginx has issues
+set +e  # Temporarily disable exit on error for nginx section
 if command -v nginx &> /dev/null; then
-    echo "🔄 Reloading Nginx..."
-    sudo systemctl reload nginx
+    echo "🔄 Checking Nginx configuration..."
+    if sudo nginx -t 2>/dev/null; then
+        echo "✅ Nginx configuration is valid, reloading..."
+        if sudo systemctl reload nginx 2>/dev/null; then
+            echo "✅ Nginx reloaded successfully"
+        else
+            echo "⚠️  Warning: Nginx reload failed, but deployment continues"
+            echo "   Please check nginx configuration manually:"
+            echo "   sudo nginx -t"
+            echo "   sudo systemctl status nginx"
+        fi
+    else
+        echo "⚠️  Warning: Nginx configuration has errors, skipping reload"
+        echo "   Please fix nginx configuration manually:"
+        echo "   sudo nginx -t"
+        echo "   sudo nano /etc/nginx/sites-available/chetana-education"
+    fi
 else
     echo "⚠️  Nginx not found, skipping reload"
 fi
+set -e  # Re-enable exit on error
 
 echo "✅ Deployment complete!"
 
