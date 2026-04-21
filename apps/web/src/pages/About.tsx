@@ -224,22 +224,13 @@ export default function About() {
           />
 
           <div className="mx-auto mt-16 max-w-4xl">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <div className="text-center p-6 bg-gray-50 dark:bg-navy-800 rounded-xl">
                 <div className="text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2">
                   12A & 80G
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Registered under Income Tax Department for tax-exempt donations
-                </p>
-              </div>
-              
-              <div className="text-center p-6 bg-gray-50 dark:bg-navy-800 rounded-xl">
-                <div className="text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                  FCRA
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Licensed to receive foreign contributions under Government of India
                 </p>
               </div>
               

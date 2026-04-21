@@ -85,7 +85,7 @@ export default function Footer() {
             <div className="mt-6 p-4 bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-400 mb-2">Legal Status:</p>
               <p className="text-sm text-gray-300">
-                Registered under Societies Registration Act | 12A & 80G Certified | FCRA Approved
+                Registered under Societies Registration Act | 12A & 80G Certified
               </p>
             </div>
             <div className="flex space-x-6">
