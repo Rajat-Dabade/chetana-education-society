@@ -15,7 +15,7 @@ const stats = [
     name: 'Children Educated',
     value: '12,500+',
     icon: Users,
-    description: 'Students supported since our inception in 2018'
+    description: 'Students supported since our inception in 1973'
   },
   {
     id: 2,

@@ -269,7 +269,7 @@ export default function About() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <SectionHeader
             title="Our Journey in Numbers"
-            subtitle="Measurable impact since our founding in 2018"
+            subtitle="Measurable impact since our founding in 1973"
           />
 
           <div className="mx-auto mt-16 max-w-2xl lg:max-w-none">
@@ -279,7 +279,7 @@ export default function About() {
                   Years of Service
                 </dt>
                 <dd className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  6+
+                  {new Date().getFullYear() - 1973}+
                 </dd>
               </div>
               <div className="flex flex-col items-center text-center">

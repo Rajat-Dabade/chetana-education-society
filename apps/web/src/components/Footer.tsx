@@ -67,15 +67,18 @@ export default function Footer() {
             <div className="space-y-2">
               <div className="flex items-start space-x-2 text-sm text-gray-300">
                 <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>B-62 Education Nagar, Community District, State 229001, India</span>
+                <span>Chetana Education Society, Shrawasti Nagar, Sawangi Meghe Road, Wardha, Maharashtra 442001, India</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-gray-300">
                 <Phone className="h-4 w-4" />
-                <span>+91 98847 10411</span>
+                <a href="tel:+917387986916" className="hover:text-white transition-colors">+91 73879 86916</a>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-gray-300">
-                <Mail className="h-4 w-4" />
-                <span>info@chetanaeducation.org</span>
+              <div className="flex items-start space-x-2 text-sm text-gray-300">
+                <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <div className="flex flex-col">
+                  <a href="mailto:chetana.sawai@gmail.com" className="hover:text-white transition-colors">chetana.sawai@gmail.com</a>
+                  <a href="mailto:chetanaedusociety1973@gmail.com" className="hover:text-white transition-colors">chetanaedusociety1973@gmail.com</a>
+                </div>
               </div>
             </div>
             

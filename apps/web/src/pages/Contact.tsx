@@ -10,17 +10,17 @@ import SectionHeader from '@/components/SectionHeader'
 const contactInfo = [
   {
     name: 'Registered Office',
-    value: 'B-62 Education Nagar\nCommunity District, State 229001\nIndia',
+    value: 'Chetana Education Society\nShrawasti Nagar, Sawangi Meghe Road\nWardha, Maharashtra 442001\nIndia',
     icon: MapPin,
   },
   {
     name: 'Phone',
-    value: '+91 98847 10411\n+91 80470 91716',
+    value: '+91 73879 86916',
     icon: Phone,
   },
   {
     name: 'Email',
-    value: 'info@chetanaeducation.org\nsupport@chetanaeducation.org',
+    value: 'chetana.sawai@gmail.com\nchetanaedusociety1973@gmail.com',
     icon: Mail,
   },
   {
@@ -216,7 +216,7 @@ export default function Contact() {
                     <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-500 dark:text-gray-400">Interactive Map</p>
                     <p className="text-xs text-gray-400 dark:text-gray-500">
-                      123 Hope Street, Community City
+                      Shrawasti Nagar, Sawangi Meghe Road, Wardha 442001
                     </p>
                   </div>
                 </div>
