@@ -47,7 +47,11 @@ router.put('/', requireAuth, async (req: AuthRequest, res) => {
         id: 1,
         siteName: result.data.siteName || 'Our NGO',
         primaryHex: result.data.primaryHex || '#0038B8',
-        logoUrl: result.data.logoUrl
+        logoUrl: result.data.logoUrl,
+        vision: result.data.vision,
+        mission: result.data.mission,
+        founderStory: result.data.founderStory,
+        whoWeAre: result.data.whoWeAre,
       }
     });
 

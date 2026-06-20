@@ -77,7 +77,11 @@ export const reorderBlogsSchema = z.array(z.object({
 export const updateSettingsSchema = z.object({
   siteName: z.string().min(1, 'Site name is required').max(100, 'Site name too long').optional(),
   primaryHex: z.string().regex(/^#[0-9A-F]{6}$/i, 'Invalid hex color format').optional(),
-  logoUrl: z.string().url('Invalid URL').optional().or(z.literal(''))
+  logoUrl: z.string().url('Invalid URL').optional().or(z.literal('')),
+  vision: z.string().optional(),
+  mission: z.string().optional(),
+  founderStory: z.string().optional(),
+  whoWeAre: z.string().optional(),
 });
 
 // Query schemas

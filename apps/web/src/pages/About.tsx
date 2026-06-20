@@ -1,25 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import { Eye, Target, Heart, UserCheck, Leaf } from 'lucide-react'
+import { Eye, Target } from 'lucide-react'
 import Hero from '@/components/Hero'
 import SectionHeader from '@/components/SectionHeader'
 import { settingsApi } from '@/lib/api'
 
-const principles = [
-  {
-    name: 'Community-Centered',
-    description: 'We work with communities, not for them. Every program is designed with input from the people we serve.',
-    icon: UserCheck,
-  },
-  {
-    name: 'Sustainable Impact',
-    description: 'We focus on long-term solutions that communities can maintain and expand independently.',
-    icon: Leaf,
-  },
-  {
-    name: 'Compassionate Action',
-    description: 'We approach every situation with empathy, respect, and understanding of local contexts.',
-    icon: Heart,
-  },
+const leadership = [
+  { name: 'Shri Dinesh Baliram Sawai', title: 'Founder President' },
+  { name: 'Dr. Chetana Dinesh Sawai', title: 'Secretary & Director' },
+  { name: 'Shri Avinash D. Sawai', title: 'Founder Secretary' },
+  { name: 'Shri Vimal S. Chate', title: 'Vice President' },
+  { name: 'Shri Mayur Dafle', title: 'Trustee' },
 ]
 
 export default function About() {
@@ -28,34 +18,92 @@ export default function About() {
     queryFn: () => settingsApi.getSettings().then(res => res.data)
   })
 
-  const vision = settings?.vision || 'To create a knowledgeable and empowered society where every child, regardless of their background, has access to quality education that transforms their life and strengthens their community.'
-  const missionArray = settings?.mission ? JSON.parse(settings.mission) : ['Ensuring education of deprived children by connecting passionate volunteers, leveraging technology, and working with communities to provide quality learning opportunities that break cycles of poverty.']
-  const founderStory = settings?.founderStory || 'Our organization was founded with a vision to empower communities through quality education and sustainable development.'
+  const vision = settings?.vision || 'To light the lamp of knowledge in every child\'s heart — especially those who have been denied the chance to learn.'
+  const missionArray = settings?.mission ? JSON.parse(settings.mission) : [
+    'Provide accessible, quality education to first-generation learners in rural Vidarbha.',
+    'Build vocational skills that create direct employment pathways for rural youth.',
+    'Empower women through professional education — and support underprivileged boys through free residential care.'
+  ]
+  const founderStory = settings?.founderStory || 'A visionary educationist and community leader from Wardha, Shri Dinesh Baliram Sawai dedicated his life to making quality education accessible to the most underserved communities of Vidarbha.'
 
   const values = [
-    {
-      name: 'Vision',
-      description: vision,
-      icon: Eye,
-    },
-    {
-      name: 'Mission',
-      description: missionArray.join(' '),
-      icon: Target,
-      missionPoints: missionArray,
-    },
+    { name: 'Vision', description: vision, icon: Eye },
+    { name: 'Mission', description: missionArray.join(' '), icon: Target, missionPoints: missionArray },
   ]
+
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
       <Hero
         title="About Chetana Education Society"
         subtitle="Learn about our mission, values, and the principles that guide our work in empowering communities through quality education."
-        backgroundImage="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1920&h=1080&fit=crop"
       />
 
-      {/* Mission, Vision, Aim */}
+      {/* Our Story */}
+      <section className="py-24 bg-white dark:bg-navy-900">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8">
+          <SectionHeader
+            title="Our Story"
+            subtitle="Five decades of building, one institution at a time"
+          />
+          <div className="mt-12 space-y-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+            <p>
+              Chetana Education Society was founded on <strong className="text-gray-900 dark:text-white">April 30, 1973</strong> by educationist and social reformer Shri Dinesh Baliram Sawai in Wardha, Maharashtra — with a conviction that quality education is the most lasting instrument of human dignity and community development.
+            </p>
+            <p>
+              Over five decades, we have built a comprehensive educational network across Wardha district — one of Maharashtra's most underserved agricultural regions. From primary schooling to professional degrees, from teacher training to industrial skills, from pharmacy education to a free residential hostel — we have consistently expanded our reach to ensure that geography and economic background are never barriers to learning.
+            </p>
+            <p>
+              More than <strong className="text-gray-900 dark:text-white">35,000 students</strong> have passed through our institutions since 1991. The majority are first-generation learners from rural families — young people for whom a Chetana institution was the door to a better life. When you educate one person from an underserved family, you transform an entire household. At scale, you transform a community.
+            </p>
+          </div>
+
+          {/* Powerful Statement */}
+          <blockquote className="mt-16 text-center border-l-4 border-primary-600 dark:border-primary-400 pl-6 py-4 bg-primary-50 dark:bg-primary-900/20 rounded-r-xl">
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+              From a single institution in 1973 to 7 programmes serving 35,000+ students — Chetana Education Society has been Wardha's educational backbone for over five decades.
+            </p>
+          </blockquote>
+        </div>
+      </section>
+
+      {/* Founder */}
       <section className="py-24 bg-gray-50 dark:bg-navy-950">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
+            <div>
+              <h2 className="text-sm font-semibold leading-7 text-primary-600 dark:text-primary-400 uppercase tracking-widest mb-3">
+                Our Founder
+              </h2>
+              <p className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl mb-2">
+                Shri Dinesh Baliram Sawai
+              </p>
+              <p className="text-base text-primary-600 dark:text-primary-400 font-medium mb-6">
+                Founder President, Chetana Education Society, Wardha
+              </p>
+              <p className="text-lg leading-8 text-gray-600 dark:text-gray-300">
+                {founderStory}
+              </p>
+            </div>
+            <div className="flex justify-center lg:justify-end">
+              <div className="relative">
+                <img
+                  src="http://chetanaeducationsociety.com/uploads/1781946805628_54qovkp9167.jpeg"
+                  alt="Shri Dinesh Baliram Sawai — Founder President, Chetana Education Society"
+                  className="w-72 h-72 rounded-2xl object-cover shadow-2xl ring-4 ring-primary-100 dark:ring-primary-900"
+                />
+                <div className="absolute -bottom-4 -right-4 bg-primary-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-lg">
+
+                  Est. 1973
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="py-24 bg-white dark:bg-navy-900">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <SectionHeader
             title="Our Foundation"
@@ -65,29 +113,25 @@ export default function About() {
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
             <div className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-8 lg:max-w-4xl lg:grid-cols-2 lg:mx-auto">
               {values.map((value, index) => (
-                <div 
-                  key={value.name} 
+                <div
+                  key={value.name}
                   className="card p-8 relative overflow-hidden animate-scale-in hover-lift"
                   style={{ animationDelay: `${index * 0.3}s` }}
                 >
-                  
-                  {/* Colored indicator dot */}
                   <div className="flex items-start justify-between mb-6">
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                       {value.name}
                     </h3>
                     <div className={`w-4 h-4 rounded-full flex-shrink-0 ${
-                      value.name === 'Vision' ? 'bg-blue-500' :
-                      value.name === 'Mission' ? 'bg-green-500' :
-                      'bg-purple-500'
+                      value.name === 'Vision' ? 'bg-blue-500' : 'bg-green-500'
                     }`}></div>
                   </div>
-                  
+
                   {value.name === 'Mission' && value.missionPoints ? (
                     <ul className="text-gray-600 dark:text-gray-300 leading-relaxed mb-8 space-y-3">
                       {value.missionPoints.map((point: string, idx: number) => (
                         <li key={idx} className="flex items-start">
-                          <span className="text-primary-600 dark:text-primary-400 mr-2">•</span>
+                          <span className="text-primary-600 dark:text-primary-400 mr-2 mt-1">•</span>
                           <span>{point}</span>
                         </li>
                       ))}
@@ -97,8 +141,7 @@ export default function About() {
                       {value.description}
                     </p>
                   )}
-                  
-                  {/* Key aspects as colored oval badges - matching your reference */}
+
                   <div className="space-y-2">
                     {value.name === 'Vision' && (
                       <>
@@ -113,7 +156,6 @@ export default function About() {
                         </div>
                       </>
                     )}
-                    
                     {value.name === 'Mission' && (
                       <>
                         <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
@@ -135,87 +177,31 @@ export default function About() {
         </div>
       </section>
 
-      {/* Founder Story */}
-      {founderStory && (
-        <section className="py-24 bg-white dark:bg-navy-900">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start">
-              <div className="lg:pr-4 lg:pt-4">
-                <div className="lg:max-w-lg">
-                  <h2 className="text-base font-semibold leading-7 text-primary-600 dark:text-primary-400">
-                    Our Story
-                  </h2>
-                  <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                    The Journey of Our Founder
-                  </p>
-                  <div className="mt-6 text-base leading-7 text-gray-600 dark:text-gray-300 whitespace-pre-line">
-                    {founderStory}
-                  </div>
-                </div>
-              </div>
-            <div className="sm:px-6 lg:px-0">
-              <div className="relative isolate overflow-hidden bg-primary-600 px-6 pt-8 sm:mx-auto sm:max-w-2xl sm:rounded-3xl sm:pl-16 sm:pr-0 sm:pt-16 lg:mx-0 lg:max-w-none">
-                <div
-                  className="absolute -inset-y-px -left-3 -z-10 w-full origin-bottom-left skew-x-[-30deg] bg-primary-100 opacity-20 ring-1 ring-inset ring-white"
-                  aria-hidden="true"
-                />
-                <div className="mx-auto max-w-2xl sm:mx-0 sm:max-w-none">
-                  <img
-                    src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&h=600&fit=crop"
-                    alt="Team meeting discussing community programs"
-                    width={2432}
-                    height={1442}
-                    className="w-full max-w-none rounded-md bg-white/5 ring-1 ring-white/10"
-                  />
-                </div>
-                <div
-                  className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/10 sm:rounded-3xl"
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      )}
-
-      {/* Our Principles */}
+      {/* Leadership Team */}
       <section className="py-24 bg-gray-50 dark:bg-navy-950">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <SectionHeader
-            title="Our Principles"
-            subtitle="The values that guide our approach to community development and social change."
+            title="Leadership Team"
+            subtitle="The dedicated individuals who guide Chetana Education Society's mission"
           />
-
-          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-              {principles.map((principle) => (
-                <div key={principle.name} className="relative pl-16">
-                  <dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
-                    <div className={`absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg ${
-                      principle.name === 'Community-Centered' ? 'bg-blue-100 dark:bg-blue-900/20' :
-                      principle.name === 'Sustainable Impact' ? 'bg-green-100 dark:bg-green-900/20' :
-                      'bg-purple-100 dark:bg-purple-900/20'
-                    }`}>
-                      <principle.icon className={`h-6 w-6 ${
-                        principle.name === 'Community-Centered' ? 'text-blue-600 dark:text-blue-400' :
-                        principle.name === 'Sustainable Impact' ? 'text-green-600 dark:text-green-400' :
-                        'text-purple-600 dark:text-purple-400'
-                      }`} aria-hidden="true" />
-                    </div>
-                    {principle.name}
-                  </dt>
-                  <dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-                    {principle.description}
-                  </dd>
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
+            {leadership.map((person) => {
+              const initials = person.name.split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0]).join('')
+              return (
+                <div key={person.name} className="card p-6 text-center hover-lift">
+                  <div className="mx-auto w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-4">
+                    <span className="text-lg font-bold text-primary-700 dark:text-primary-300">{initials}</span>
+                  </div>
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-white">{person.name}</h3>
+                  <p className="text-sm text-primary-600 dark:text-primary-400 mt-1">{person.title}</p>
                 </div>
-              ))}
-            </dl>
+              )
+            })}
           </div>
         </div>
       </section>
 
-      {/* Legal Credentials & Trust */}
+      {/* Legal Credentials */}
       <section className="py-24 bg-white dark:bg-navy-900">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <SectionHeader
@@ -224,31 +210,25 @@ export default function About() {
           />
 
           <div className="mx-auto mt-16 max-w-4xl">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <div className="text-center p-6 bg-gray-50 dark:bg-navy-800 rounded-xl">
-                <div className="text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                  12A & 80G
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+              {[
+                { label: '12A & 80G', sub: 'Tax-exempt donations · AAATC3478Q' },
+                { label: 'CSR-1', sub: 'CSR00095049 · Companies Act 2013' },
+                { label: 'Trust Reg.', sub: 'F/164/1973 · Bombay Public Trust Act' },
+                { label: 'NCVT ITI', sub: 'PR27000776 · DVET 0772' },
+              ].map(item => (
+                <div key={item.label} className="text-center p-5 bg-gray-50 dark:bg-navy-800 rounded-xl">
+                  <div className="text-xl font-bold text-primary-600 dark:text-primary-400 mb-2">
+                    {item.label}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{item.sub}</p>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Registered under Income Tax Department for tax-exempt donations
-                </p>
-              </div>
-              
-              <div className="text-center p-6 bg-gray-50 dark:bg-navy-800 rounded-xl">
-                <div className="text-2xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                  Audited
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Annual financial audits ensure transparent fund utilization
-                </p>
-              </div>
+              ))}
             </div>
-            
+
             <div className="mt-12 text-center">
               <p className="text-sm text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Chetana Education Society is registered under the Societies Registration Act and maintains 
-                all required legal compliance. Our financial records are audited annually by certified 
-                public accountants to ensure transparency and accountability to our donors and beneficiaries.
+                Chetana Education Society is registered under the Societies Registration Act and the Bombay Public Trust Act. Our financial records are audited annually by certified public accountants to ensure transparency and accountability to our donors and beneficiaries.
               </p>
             </div>
           </div>
@@ -264,39 +244,23 @@ export default function About() {
           />
 
           <div className="mx-auto mt-16 max-w-2xl lg:max-w-none">
-            <dl className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="flex flex-col items-center text-center">
-                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Years of Service
-                </dt>
-                <dd className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  {new Date().getFullYear() - 1973}+
-                </dd>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Children Educated
-                </dt>
-                <dd className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  12,500+
-                </dd>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Active Volunteers
-                </dt>
-                <dd className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  200+
-                </dd>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Partner Schools
-                </dt>
-                <dd className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-                  85
-                </dd>
-              </div>
+            <dl className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
+              {[
+                { label: 'Years of Service', value: '52+' },
+                { label: 'Students Served', value: '35,000+' },
+                { label: 'Institutions', value: '7' },
+                { label: 'Women in B.Ed', value: '60%+' },
+                { label: 'Free Hostel Since', value: '1994' },
+              ].map(stat => (
+                <div key={stat.label} className="flex flex-col items-center text-center">
+                  <dd className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                    {stat.value}
+                  </dd>
+                  <dt className="mt-1 text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {stat.label}
+                  </dt>
+                </div>
+              ))}
             </dl>
           </div>
         </div>

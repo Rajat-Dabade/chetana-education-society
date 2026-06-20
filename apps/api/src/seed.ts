@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword } from './lib/auth';
-import { createSlug } from './lib/utils';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -12,6 +11,8 @@ const visionMission = JSON.parse(fs.readFileSync(path.join(dataDir, 'vision-miss
 const founderStory = JSON.parse(fs.readFileSync(path.join(dataDir, 'founder-story.json'), 'utf-8'));
 const navodayaAchievers = JSON.parse(fs.readFileSync(path.join(dataDir, 'navodaya-achievers.json'), 'utf-8'));
 const successStories = JSON.parse(fs.readFileSync(path.join(dataDir, 'success-stories.json'), 'utf-8'));
+const milestonesData = JSON.parse(fs.readFileSync(path.join(dataDir, 'milestones.json'), 'utf-8'));
+const blogPostsData = JSON.parse(fs.readFileSync(path.join(dataDir, 'blog-posts.json'), 'utf-8'));
 
 async function main() {
   console.log('🌱 Starting database seed...');
@@ -51,52 +52,85 @@ async function main() {
   });
   console.log('✅ Created site settings with vision, mission, and founder story');
 
-  // Add success stories from JSON files (real content from docs)
-for (const story of successStories.stories) {
-  const existing = await prisma.successStory.findFirst({
-    where: { slug: story.slug }
-  });
-  
-  if (!existing) {
-    await prisma.successStory.create({ 
-      data: {
-        title: story.title,
-        slug: story.slug,
-        excerpt: story.excerpt,
-        content: story.content
-      }
+  // Add success stories from JSON files
+  for (const story of successStories.stories) {
+    const existing = await prisma.successStory.findFirst({
+      where: { slug: story.slug }
     });
-  }
-}
-console.log('✅ Created success stories');
 
-  // Create milestones - only Navodaya achievers from docs
-  const milestones: Array<{ title: string; description: string; achievedOn: Date }> = [];
+    if (!existing) {
+      await prisma.successStory.create({
+        data: {
+          title: story.title,
+          slug: story.slug,
+          excerpt: story.excerpt,
+          content: story.content
+        }
+      });
+    }
+  }
+  console.log('✅ Created success stories');
+
+  // Create milestones from milestones.json (CES history timeline)
+  for (const milestone of milestonesData.milestones) {
+    const achievedOn = new Date(`${milestone.year}-06-01`);
+    const existing = await prisma.milestone.findFirst({
+      where: { title: milestone.title }
+    });
+
+    if (!existing) {
+      await prisma.milestone.create({
+        data: {
+          title: milestone.title,
+          description: milestone.description,
+          achievedOn
+        }
+      });
+    }
+  }
+  console.log('✅ Created milestones (CES history timeline)');
 
   // Add Navodaya achievers as milestones
   for (const achiever of navodayaAchievers.achievers) {
     const yearParts = achiever.year.split('-');
     const year = parseInt(yearParts[0]);
-    milestones.push({
-      title: `${achiever.name} - Navodaya Achiever`,
-      description: `Selected for Jawahar Navodaya Vidyalaya in ${achiever.year}`,
-      achievedOn: new Date(`${year}-06-01`)
-    });
-  }
-
-  for (const milestone of milestones) {
+    const title = `${achiever.name} - Navodaya Achiever`;
     const existing = await prisma.milestone.findFirst({
-      where: { 
-        title: milestone.title,
-        achievedOn: milestone.achievedOn 
-      }
+      where: { title }
     });
-    
+
     if (!existing) {
-      await prisma.milestone.create({ data: milestone });
+      await prisma.milestone.create({
+        data: {
+          title,
+          description: `Selected for Jawahar Navodaya Vidyalaya in ${achiever.year}`,
+          achievedOn: new Date(`${year}-06-01`)
+        }
+      });
     }
   }
-  console.log('✅ Created milestones (Navodaya achievers)');
+  console.log('✅ Created Navodaya achiever milestones');
+
+  // Add blog posts
+  for (const post of blogPostsData.posts) {
+    const existing = await prisma.blogPost.findFirst({
+      where: { slug: post.slug }
+    });
+
+    if (!existing) {
+      await prisma.blogPost.create({
+        data: {
+          title: post.title,
+          slug: post.slug,
+          author: post.author,
+          excerpt: post.excerpt,
+          content: post.content,
+          order: post.order || 0
+        }
+      });
+    }
+  }
+  console.log('✅ Created blog posts');
 
   console.log('🎉 Database seeded successfully!');
   console.log('📧 Admin login: admin@ngo.org');
