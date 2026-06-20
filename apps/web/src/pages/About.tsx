@@ -37,6 +37,7 @@ export default function About() {
       <Hero
         title="About Chetana Education Society"
         subtitle="Learn about our mission, values, and the principles that guide our work in empowering communities through quality education."
+        backgroundImage="http://chetanaeducationsociety.com/uploads/1781946811582_brhadeta6bh.jpeg"
       />
 
       {/* Our Story */}

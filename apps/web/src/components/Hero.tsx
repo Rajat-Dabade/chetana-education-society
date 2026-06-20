@@ -24,7 +24,7 @@ export default function Hero({
   overlay = true
 }: HeroProps) {
   return (
-    <section className="relative bg-star-pattern min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh]">
+    <section className={`relative min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] ${backgroundImage ? 'bg-star-pattern' : 'bg-primary-800 dark:bg-navy-900'}`}>
       {/* Background Image */}
       {backgroundImage && (
         <div className="absolute inset-0">
