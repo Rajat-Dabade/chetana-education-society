@@ -56,7 +56,7 @@ export default function Donate() {
       <Hero
         title="Partner With Us"
         subtitle="Your CSR investment with Chetana Education Society reaches real communities in rural Wardha — creating measurable, auditable, and lasting change across education, skill development, and social welfare."
-        backgroundImage="http://chetanaeducationsociety.com/uploads/1781946808104_t8w0inhfso.jpeg"
+        backgroundImage="https://chetanaeducationsociety.com/uploads/1781946808104_t8w0inhfso.jpeg"
       />
 
       {/* Opening Statement */}

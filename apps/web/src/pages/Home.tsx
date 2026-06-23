@@ -84,7 +84,7 @@ export default function Home() {
         subtitle="Over five decades of quality education in rural Wardha — schools, colleges, ITI skill training, pharmacy education, and a free hostel for underprivileged boys."
         primaryCTA={{ text: 'Partner With Us', href: '/donate' }}
         secondaryCTA={{ text: 'Our Story', href: '/about' }}
-        backgroundImage="http://chetanaeducationsociety.com/uploads/1781946807420_i8i6pnu8zw.jpeg"
+        backgroundImage="https://chetanaeducationsociety.com/uploads/1781946807420_i8i6pnu8zw.jpeg"
       />
 
       {/* Award Badge Strip */}

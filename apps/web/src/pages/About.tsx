@@ -37,7 +37,7 @@ export default function About() {
       <Hero
         title="About Chetana Education Society"
         subtitle="Learn about our mission, values, and the principles that guide our work in empowering communities through quality education."
-        backgroundImage="http://chetanaeducationsociety.com/uploads/1781946811582_brhadeta6bh.jpeg"
+        backgroundImage="https://chetanaeducationsociety.com/uploads/1781946811582_brhadeta6bh.jpeg"
       />
 
       {/* Our Story */}
@@ -89,7 +89,7 @@ export default function About() {
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 <img
-                  src="http://chetanaeducationsociety.com/uploads/1781946805628_54qovkp9167.jpeg"
+                  src="https://chetanaeducationsociety.com/uploads/1781946805628_54qovkp9167.jpeg"
                   alt="Shri Dinesh Baliram Sawai — Founder President, Chetana Education Society"
                   className="w-72 h-72 rounded-2xl object-cover shadow-2xl ring-4 ring-primary-100 dark:ring-primary-900"
                 />
