@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, Sun, Moon } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
+import { settingsApi } from '@/lib/api'
 import logo from '@/assets/logo.png'
 
 const navigation = [
@@ -26,6 +28,12 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => settingsApi.getSettings().then(res => res.data),
+    staleTime: 5 * 60 * 1000,
+  })
+  const logoSrc = settings?.logoUrl || logo
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/'
@@ -38,9 +46,9 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5 flex items-center space-x-3 group">
-            <img 
-              src={logo} 
-              alt="Chetana Education Society Logo" 
+            <img
+              src={logoSrc}
+              alt="Chetana Education Society Logo"
               className="h-10 w-10 sm:h-12 sm:w-12 object-contain transition-all duration-300 group-hover:scale-110"
             />
             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
