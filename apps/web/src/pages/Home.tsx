@@ -92,9 +92,13 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
             <Award className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+            <Link
+              to="/blogs/sakal-idols-of-maharashtra-award-2022-education"
+              className="text-sm font-medium text-amber-800 dark:text-amber-300 hover:underline flex items-center gap-1"
+            >
               🏆 Sakal Idols of Maharashtra Award 2022 — Education Category
-            </p>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
             <span className="hidden sm:inline text-amber-400">·</span>
             <Link
               to="/blogs/ces-mou-dhammakaya-foundation-thailand-2026"
