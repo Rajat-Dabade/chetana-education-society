@@ -253,11 +253,11 @@ export default function Donate() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <a
-              href="tel:+917387986916"
+              href="tel:+917499231645"
               className="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-xl hover:bg-primary-50 transition-colors"
             >
               <Phone className="h-5 w-5" />
-              +91 73879 86916
+              +91 74992 31645
             </a>
             <a
               href="mailto:chetana.sawai@gmail.com"

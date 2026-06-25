@@ -15,7 +15,7 @@ const contactInfo = [
   },
   {
     name: 'Phone',
-    value: '+91 73879 86916',
+    value: '+91 74992 31645',
     icon: Phone,
   },
   {
