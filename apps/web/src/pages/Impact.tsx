@@ -45,7 +45,7 @@ export default function Impact() {
           text: "Read Success Stories",
           href: "#stories"
         }}
-        backgroundImage="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&h=1080&fit=crop"
+        backgroundImage="https://chetanaeducationsociety.com/uploads/1782348554719_97j7xst4aao.jpeg"
       />
 
       {/* Current Year Impact Stats */}

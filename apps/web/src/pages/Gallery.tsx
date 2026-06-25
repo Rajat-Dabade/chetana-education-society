@@ -45,7 +45,7 @@ export default function Gallery() {
       <Hero
         title="Photo Gallery"
         subtitle="Explore moments of joy, transformation, and community impact through our visual stories"
-        backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1920&h=1080&fit=crop"
+        backgroundImage="https://chetanaeducationsociety.com/uploads/1782348555352_utd0ect8mor.jpeg"
       />
 
       {/* Search */}
