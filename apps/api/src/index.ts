@@ -40,6 +40,8 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:5174',
+      'https://chetanaeducationsociety.com',
+      'https://www.chetanaeducationsociety.com',
       'https://chetana-education-society-api.vercel.app',
       'https://*.vercel.app',
       'https://*.netlify.app',
